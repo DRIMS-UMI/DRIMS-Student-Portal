@@ -104,7 +104,8 @@ const Settings = () => {
         email: userData?.student?.email || '',
         phoneNumber: userData?.student?.phoneNumber || '',
         registrationNumber: userData?.student?.registrationNumber || '',
-        course: userData?.student?.course || '',
+        course: userData?.student?.course?.title || userData?.student?.course || '',
+        specialization: userData?.student?.specialization?.name || userData?.student?.specialization || '',
         academicYear: userData?.student?.academicYear || ''
       };
       setUserDetails(details);
@@ -112,12 +113,14 @@ const Settings = () => {
     }
   }, [userData]);
 
+  console.log("trace", userData);
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     try {
-      await updateProfileMutation.mutateAsync(editedUserDetails);
+      const { course, specialization, registrationNumber, email, ...updatePayload } = editedUserDetails;
+      await updateProfileMutation.mutateAsync(updatePayload);
     } finally {
       setIsSubmitting(false);
     }
@@ -201,6 +204,10 @@ const Settings = () => {
                     <p className="text-sm font-medium">{userDetails.course || 'Not specified'}</p>
                   </div>
                   <div>
+                    <p className="text-xs text-semantic-text-secondary">Specialization</p>
+                    <p className="text-sm font-medium">{userDetails.specialization || 'Not specified'}</p>
+                  </div>
+                  <div>
                     <p className="text-xs text-semantic-text-secondary">Academic Year</p>
                     <p className="text-sm font-medium">{userDetails.academicYear || 'Not specified'}</p>
                   </div>
@@ -265,9 +272,20 @@ const Settings = () => {
             <input
               type="text"
               id="course"
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-primary-500 focus:outline-none"
+              className="w-full p-2 border border-gray-300 bg-gray-50 text-gray-500 rounded-md focus:outline-none cursor-not-allowed"
               value={editedUserDetails.course}
-              onChange={(e) => setEditedUserDetails({ ...editedUserDetails, course: e.target.value })}
+              disabled
+            />
+          </div>
+
+          <div>
+            <label htmlFor="specialization" className="block text-sm font-medium text-gray-700 mb-1">Specialization</label>
+            <input
+              type="text"
+              id="specialization"
+              className="w-full p-2 border border-gray-300 bg-gray-50 text-gray-500 rounded-md focus:outline-none cursor-not-allowed"
+              value={editedUserDetails.specialization}
+              disabled
             />
           </div>
 
