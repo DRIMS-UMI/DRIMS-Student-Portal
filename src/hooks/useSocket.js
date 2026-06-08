@@ -1,8 +1,9 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { io } from 'socket.io-client';
 
-// const SOCKET_URL = 'http://localhost:5000';
-const SOCKET_URL = 'https://drimsapi.umi.ac.ug';
+import { BASE_API_URL } from '../utils/apiRequestUrl';
+
+const SOCKET_URL = BASE_API_URL.replace('/api/v1', '');
 
 export function useSocket(onMessage, onUserStatusChange, onTyping) {
   const socketRef = useRef(null);
