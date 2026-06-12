@@ -18,6 +18,7 @@ import ResearchClinic from "./pages/9.ResearchClinic/ResearchClinic";
 
 // PWA Component
 import PWAInstaller from "./components/PWAInstaller";
+import SupportChatWidget from "./components/SupportChatWidget";
 
 function App() {
   return (
@@ -54,6 +55,9 @@ function App() {
       
       {/* PWA Installer - shows on all pages including login */}
       <PWAInstaller />
+      
+      {/* Floating Support Chat Widget */}
+      <SupportChatWidget />
     </Router>
   );
 }
