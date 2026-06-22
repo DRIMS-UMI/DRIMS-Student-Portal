@@ -277,4 +277,33 @@ export const cancelResearchClinicBookingService = async (bookingId: string) => {
     } catch (error) {
         errorHandling(error);
     }
-}; 
+};
+
+/* ********** APPOINTMENTS ********** */
+
+export const getAvailableAppointmentsService = async () => {
+    try {
+        const response = await apiRequest.get("/student/appointments/availability");
+        return response.data;
+    } catch (error) {
+        errorHandling(error);
+    }
+};
+
+export const bookAppointmentService = async (data: any) => {
+    try {
+        const response = await apiRequest.post("/student/appointments", data);
+        return response.data;
+    } catch (error) {
+        errorHandling(error);
+    }
+};
+
+export const getStudentAppointmentsService = async () => {
+    try {
+        const response = await apiRequest.get("/student/appointments");
+        return response.data;
+    } catch (error) {
+        errorHandling(error);
+    }
+};

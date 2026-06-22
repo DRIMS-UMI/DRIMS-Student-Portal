@@ -23,6 +23,7 @@ const Sidebar = ({ onClose }) => {
     { name: 'My Profile', path: '/profile', icon: 'mdi:account', color: 'text-gray-400' },
     { name: 'Research Requests', path: '/requests', icon: 'mdi:calendar-check', color: 'text-gray-400' },
     { name: 'Research Clinic', path: '/research-clinic', icon: 'mdi:medical-bag', color: 'text-gray-400' },
+    { name: 'Appointments', path: '/appointments', icon: 'mdi:calendar-clock', color: 'text-gray-400' },
     { name: 'Documents', path: '/documents', icon: 'mdi:file-document', color: 'text-gray-400' },
     { name: 'Evaluations', path: '/evaluations', icon: 'mdi:clipboard-list', color: 'text-gray-400' },
     { name: 'Direct Messages', path: '/direct-messages', icon: 'mdi:message-text', color: 'text-gray-400', badge: unreadCount },

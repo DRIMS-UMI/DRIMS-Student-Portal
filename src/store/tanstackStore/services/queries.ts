@@ -24,6 +24,9 @@ import {
   bookResearchClinicSessionService,
   getStudentResearchClinicBookingsService,
   cancelResearchClinicBookingService,
+  getAvailableAppointmentsService,
+  bookAppointmentService,
+  getStudentAppointmentsService
 } from './api';
 
 /* ********** STUDENT QUERIES ********** */
@@ -281,3 +284,29 @@ export const useCancelResearchClinicBooking = () => {
     },
   });
 }; 
+
+/* ********** APPOINTMENTS ********** */
+
+export const useGetAvailableAppointments = () => {
+  return useQuery({
+    queryKey: ['availableAppointments'],
+    queryFn: getAvailableAppointmentsService,
+  });
+};
+
+export const useGetStudentAppointments = () => {
+  return useQuery({
+    queryKey: ['studentAppointments'],
+    queryFn: getStudentAppointmentsService,
+  });
+};
+
+export const useBookAppointment = () => {
+  return useMutation({
+    mutationFn: bookAppointmentService,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['availableAppointments'] });
+      queryClient.invalidateQueries({ queryKey: ['studentAppointments'] });
+    },
+  });
+};
