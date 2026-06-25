@@ -172,13 +172,16 @@ const SupportChatWidget = () => {
           {/* Header */}
           <div className="bg-blue-800 text-white p-4 flex justify-between items-center shadow-md">
             <div>
-              <h3 className="font-semibold text-lg">Support Chat</h3>
-              <div className="flex items-center text-xs opacity-90 mt-1">
+              <h3 className="font-semibold text-lg">IT Support Chat</h3>
+              <p className="text-[10px] text-blue-100 font-medium uppercase tracking-wide mt-0.5 mb-1">
+                Help from the IT for any issues
+              </p>
+              <div className="flex items-center text-xs opacity-90">
                 <span className={`w-2 h-2 rounded-full mr-2 ${isSupportOnline ? 'bg-green-400' : 'bg-gray-400'}`}></span>
                 {isSupportOnline ? 'Agents Online' : 'Agents Offline (Email Mode)'}
               </div>
             </div>
-            <button onClick={() => setIsOpen(false)} className="text-white hover:bg-blue-700 p-1 rounded-md transition-colors">
+            <button onClick={() => setIsOpen(false)} className="text-white hover:bg-blue-700 p-1 rounded-md transition-colors self-start mt-1">
               <FiX className="w-5 h-5" />
             </button>
           </div>
