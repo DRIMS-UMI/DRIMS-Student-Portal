@@ -3,8 +3,11 @@ import { io } from 'socket.io-client';
 import apiRequest, { BASE_API_URL } from '../utils/apiRequestUrl';
 import { FiMessageSquare, FiX, FiSend, FiPaperclip, FiUser, FiMail, FiPhone } from 'react-icons/fi';
 import { toast } from 'sonner';
+import { useLocation } from 'react-router-dom';
 
 const SupportChatWidget = () => {
+  const location = useLocation();
+  
   const [isOpen, setIsOpen] = useState(false);
   const [isSupportOnline, setIsSupportOnline] = useState(false);
   const [socket, setSocket] = useState(null);
@@ -156,6 +159,10 @@ const SupportChatWidget = () => {
 
   const hasToken = !!(localStorage.getItem('umi_student_auth_token') || localStorage.getItem('token'));
   const needsGuestForm = !hasToken && !isRegisteredGuest;
+
+  if (location.pathname.includes('/direct-messages')) {
+    return null;
+  }
 
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
