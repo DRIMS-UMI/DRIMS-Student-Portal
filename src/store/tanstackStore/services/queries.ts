@@ -26,7 +26,9 @@ import {
   cancelResearchClinicBookingService,
   getAvailableAppointmentsService,
   bookAppointmentService,
-  getStudentAppointmentsService
+  getStudentAppointmentsService,
+  rescheduleAppointmentService,
+  cancelAppointmentService
 } from './api';
 
 /* ********** STUDENT QUERIES ********** */
@@ -304,6 +306,26 @@ export const useGetStudentAppointments = () => {
 export const useBookAppointment = () => {
   return useMutation({
     mutationFn: bookAppointmentService,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['availableAppointments'] });
+      queryClient.invalidateQueries({ queryKey: ['studentAppointments'] });
+    },
+  });
+};
+
+export const useRescheduleAppointment = () => {
+  return useMutation({
+    mutationFn: rescheduleAppointmentService,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['availableAppointments'] });
+      queryClient.invalidateQueries({ queryKey: ['studentAppointments'] });
+    },
+  });
+};
+
+export const useCancelAppointment = () => {
+  return useMutation({
+    mutationFn: cancelAppointmentService,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['availableAppointments'] });
       queryClient.invalidateQueries({ queryKey: ['studentAppointments'] });

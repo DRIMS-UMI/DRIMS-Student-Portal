@@ -307,3 +307,24 @@ export const getStudentAppointmentsService = async () => {
         errorHandling(error);
     }
 };
+
+export const rescheduleAppointmentService = async (data: { appointmentId: string; newAvailabilityId: string; notes?: string }) => {
+    try {
+        const response = await apiRequest.put(`/student/appointments/${data.appointmentId}/reschedule`, {
+            newAvailabilityId: data.newAvailabilityId,
+            notes: data.notes
+        });
+        return response.data;
+    } catch (error) {
+        errorHandling(error);
+    }
+};
+
+export const cancelAppointmentService = async (appointmentId: string) => {
+    try {
+        const response = await apiRequest.put(`/student/appointments/${appointmentId}/cancel`);
+        return response.data;
+    } catch (error) {
+        errorHandling(error);
+    }
+};

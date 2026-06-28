@@ -1,34 +1,48 @@
-import React, { useState } from 'react';
-import { useGetAvailableAppointments, useBookAppointment } from '../../store/tanstackStore/services/queries';
+import React, { useState, useEffect } from 'react';
+import { useGetAvailableAppointments, useRescheduleAppointment } from '../../store/tanstackStore/services/queries';
 import { X, Calendar, Clock, Users, ArrowRight, MapPin, Video, FileText } from 'lucide-react';
 import { toast } from 'sonner';
 import { format12HourTime } from '../../utils/formatTime';
 
-const BookAppointmentModal = ({ isOpen, onClose }) => {
+const RescheduleAppointmentModal = ({ isOpen, onClose, appointment }) => {
   const { data: availabilities, isLoading } = useGetAvailableAppointments();
-  const bookAppointment = useBookAppointment();
+  const rescheduleAppointment = useRescheduleAppointment();
   
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [notes, setNotes] = useState('');
 
-  if (!isOpen) return null;
+  // Pre-fill notes and clear selection when modal opens
+  useEffect(() => {
+    if (isOpen && appointment) {
+      setNotes(appointment.notes || '');
+      setSelectedSlot(null);
+    }
+  }, [isOpen, appointment]);
+
+  if (!isOpen || !appointment) return null;
+
+  // Filter out the current appointment slot and only show slots for the same supervisor
+  const validAvailabilities = availabilities?.filter(slot => 
+    slot.supervisor?.id === appointment.supervisor?.id && 
+    slot.id !== appointment.availability?.id
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!selectedSlot) return;
 
-    bookAppointment.mutate({
-      availabilityId: selectedSlot,
+    rescheduleAppointment.mutate({
+      appointmentId: appointment.id,
+      newAvailabilityId: selectedSlot,
       notes
     }, {
       onSuccess: () => {
         setSelectedSlot(null);
-        setNotes('');
-        toast.success("Appointment booked successfully!");
+        toast.success("Appointment rescheduled successfully!");
         onClose();
       },
       onError: (error) => {
-        toast.error(error.message || "Failed to book appointment");
+        toast.error(error.message || "Failed to reschedule appointment");
       }
     });
   };
@@ -38,8 +52,8 @@ const BookAppointmentModal = ({ isOpen, onClose }) => {
       <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center p-6 border-b border-gray-100 sticky top-0 bg-white z-10">
           <div>
-            <h2 className="text-xl font-semibold text-gray-900">Book Appointment</h2>
-            <p className="text-sm text-gray-500 mt-1">Select an available time slot below</p>
+            <h2 className="text-xl font-semibold text-gray-900">Reschedule Appointment</h2>
+            <p className="text-sm text-gray-500 mt-1">Select a new time slot with {appointment.supervisor?.name || 'your supervisor'}</p>
           </div>
           <button 
             onClick={onClose}
@@ -52,13 +66,13 @@ const BookAppointmentModal = ({ isOpen, onClose }) => {
         <div className="p-6">
           {isLoading ? (
             <div className="flex justify-center p-8"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-900"></div></div>
-          ) : availabilities && availabilities.length > 0 ? (
+          ) : validAvailabilities && validAvailabilities.length > 0 ? (
             <form onSubmit={handleSubmit} className="space-y-6">
               
               <div className="space-y-3">
                 <label className="block text-sm font-medium text-gray-700">Available Slots</label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {availabilities.map((slot) => {
+                  {validAvailabilities.map((slot) => {
                     const isSelected = selectedSlot === slot.id;
                     const isFull = slot.currentBookings >= slot.maxStudents;
                     
@@ -146,11 +160,11 @@ const BookAppointmentModal = ({ isOpen, onClose }) => {
                 </button>
                 <button
                   type="submit"
-                  disabled={!selectedSlot || bookAppointment.isPending}
+                  disabled={!selectedSlot || rescheduleAppointment.isPending}
                   className="px-6 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md font-medium text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 cursor-pointer"
                 >
-                  {bookAppointment.isPending ? 'Booking...' : (
-                    <>Confirm Booking <ArrowRight size={16} /></>
+                  {rescheduleAppointment.isPending ? 'Rescheduling...' : (
+                    <>Confirm Reschedule <ArrowRight size={16} /></>
                   )}
                 </button>
               </div>
@@ -159,7 +173,7 @@ const BookAppointmentModal = ({ isOpen, onClose }) => {
             <div className="text-center py-12 text-gray-500">
               <Calendar size={48} className="mx-auto text-gray-300 mb-4" />
               <p>No availability slots found.</p>
-              <p className="text-sm mt-1">Your supervisor hasn't set up any open appointment times yet.</p>
+              <p className="text-sm mt-1">Your supervisor hasn't set up any other open appointment times yet.</p>
             </div>
           )}
         </div>
@@ -168,4 +182,4 @@ const BookAppointmentModal = ({ isOpen, onClose }) => {
   );
 };
 
-export default BookAppointmentModal;
+export default RescheduleAppointmentModal;
