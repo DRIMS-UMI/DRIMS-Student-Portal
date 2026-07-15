@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-export const BASE_API_URL = "https://drimsapi.alero.digital/api/v1";
+//export const BASE_API_URL = "https://drimsapi.alero.digital/api/v1";
 //export const BASE_API_URL = 'http://localhost:5000/api/v1';
-//export const BASE_API_URL = 'https://drimsapi.umi.ac.ug/api/v1';
+export const BASE_API_URL = 'https://drimsapi.umi.ac.ug/api/v1';
 
 const apiRequest = axios.create({
   baseURL: BASE_API_URL,
@@ -30,11 +30,19 @@ apiRequest.interceptors.response.use(
   },
   (error) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid
-      localStorage.removeItem('token');
-      localStorage.removeItem('role');
-      localStorage.removeItem('umi_student_auth_token');
-      window.location.href = '/login';
+      // Check if this was a login request
+      const isLoginRequest = error.config && error.config.url && error.config.url.includes('/login');
+
+      if (!isLoginRequest) {
+        // Token expired or invalid
+        localStorage.removeItem('token');
+        localStorage.removeItem('role');
+        localStorage.removeItem('umi_student_auth_token');
+
+        if (window.location.pathname !== '/login') {
+          window.location.href = '/login';
+        }
+      }
     }
     return Promise.reject(error);
   }

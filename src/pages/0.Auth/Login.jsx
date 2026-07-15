@@ -65,14 +65,17 @@ const Login = () => {
 
             } catch (error) {
               setSubmitting(false)
-              console.error('Login failed:', error)
+
 
               // Handle different types of errors
               if (error.message) {
-                if (error.message.includes('Student not found') || error.message.includes('Invalid password')) {
-                  setFieldError('email', 'Incorrect username or password. Please try again.')
-                  setFieldError('password', 'Incorrect username or password. Please try again.')
-                } else if (error.message.includes('deactivated')) {
+                if (error.message.includes('Student not found')) {
+                  setFieldError('email', 'Student not found. Please contact the administrator.')
+
+                } else if (error.message.includes('Invalid password')) {
+                  setFieldError('password', 'Incorrect password. Please try again.')
+                }
+                else if (error.message.includes('deactivated')) {
                   setFieldError('email', 'Your account has been deactivated. Please contact the administrator.')
                 } else if (error.message.includes('Unauthorized access')) {
                   setFieldError('email', 'Unauthorized access. Please contact the administrator.')
