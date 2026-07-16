@@ -92,7 +92,7 @@ const Login = () => {
             <Form>
               {/* Email Field */}
               <div className="mb-3">
-                <label htmlFor="email" className="text-sm">Registration Numbers</label>
+                <label htmlFor="email" className="text-sm">Registration Number</label>
                 <Field
                   name="email"
                   type="text"
