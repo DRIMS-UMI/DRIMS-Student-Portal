@@ -106,12 +106,16 @@ const SupportTickets = () => {
     formData.append('source', 'STUDENT_PORTAL');
 
     try {
-      await createMutation.mutateAsync(formData);
+      const result = await createMutation.mutateAsync(formData);
       toast.success('Ticket created successfully');
       setIsCreating(false);
       setNewSubject('');
       setNewMessage('');
       setNewPriority('MEDIUM');
+      const newTicket = result?.ticket;
+      if (newTicket) {
+        setSelectedTicket(newTicket);
+      }
     } catch (error) {
       toast.error(error.message || 'Failed to create ticket');
     }
