@@ -328,3 +328,40 @@ export const cancelAppointmentService = async (appointmentId: string) => {
         errorHandling(error);
     }
 };
+
+/* ********** SUPPORT TICKETS ********** */
+
+export const getStudentTicketsService = async () => {
+    try {
+        const response = await apiRequest.get("/tickets/student/me");
+        return response.data;
+    } catch (error) {
+        errorHandling(error);
+    }
+};
+
+export const createSupportTicketService = async (data: any) => {
+    try {
+        // Tickets use multipart/form-data if there is an attachment, 
+        // but can use JSON if no attachment. We'll assume JSON unless form-data is passed.
+        // Actually, the backend uses `upload.single('attachment')` which means we should use FormData
+        // if there's a file. If data is a FormData object, Axios handles it.
+        const response = await apiRequest.post("/tickets", data, {
+            headers: data instanceof FormData ? { 'Content-Type': 'multipart/form-data' } : undefined
+        });
+        return response.data;
+    } catch (error) {
+        errorHandling(error);
+    }
+};
+
+export const replyToTicketService = async ({ id, data }: { id: string, data: any }) => {
+    try {
+        const response = await apiRequest.post(`/tickets/${id}/messages`, data, {
+            headers: data instanceof FormData ? { 'Content-Type': 'multipart/form-data' } : undefined
+        });
+        return response.data;
+    } catch (error) {
+        errorHandling(error);
+    }
+};

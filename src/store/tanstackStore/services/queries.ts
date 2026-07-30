@@ -28,7 +28,10 @@ import {
   bookAppointmentService,
   getStudentAppointmentsService,
   rescheduleAppointmentService,
-  cancelAppointmentService
+  cancelAppointmentService,
+  getStudentTicketsService,
+  createSupportTicketService,
+  replyToTicketService
 } from './api';
 
 /* ********** STUDENT QUERIES ********** */
@@ -329,6 +332,33 @@ export const useCancelAppointment = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['availableAppointments'] });
       queryClient.invalidateQueries({ queryKey: ['studentAppointments'] });
+    },
+  });
+};
+
+/* ********** SUPPORT TICKETS ********** */
+
+export const useGetStudentTickets = () => {
+  return useQuery({
+    queryKey: ['studentTickets'],
+    queryFn: getStudentTicketsService,
+  });
+};
+
+export const useCreateSupportTicket = () => {
+  return useMutation({
+    mutationFn: createSupportTicketService,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['studentTickets'] });
+    },
+  });
+};
+
+export const useReplyToTicket = () => {
+  return useMutation({
+    mutationFn: replyToTicketService,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['studentTickets'] });
     },
   });
 };

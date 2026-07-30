@@ -29,6 +29,7 @@ const Sidebar = ({ onClose }) => {
     { name: 'Direct Messages', path: '/direct-messages', icon: 'mdi:message-text', color: 'text-gray-400', badge: unreadCount },
   ];
   const otherNavItems = [
+    { name: 'Support Tickets', path: '/support-tickets', icon: 'mdi:ticket', color: 'text-gray-400' },
     // { name: 'Notifications', path: '/notifications', icon: 'mdi:cube', color: 'text-gray-400' },
     { name: 'Settings', path: '/settings', icon: 'mdi:cog', color: 'text-gray-400' },
   ];

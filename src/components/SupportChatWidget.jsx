@@ -63,6 +63,7 @@ const SupportChatWidget = () => {
       const ticketData = {
         subject: 'Live Chat Request',
         priority: 'MEDIUM',
+        source: 'STUDENT_PORTAL',
       };
 
       if (!token) {
@@ -143,13 +144,9 @@ const SupportChatWidget = () => {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
-      const sentMsg = res.data.data;
       setNewMessage('');
       setFile(null);
 
-      if (socket) {
-        socket.emit('support_message', { ticketId: ticketId, message: sentMsg });
-      }
     } catch (err) {
       toast.error('Failed to send message.');
     } finally {

@@ -20,6 +20,7 @@ import Appointments from "./pages/10.Appointments/Appointments";
 // PWA Component
 import PWAInstaller from "./components/PWAInstaller";
 import SupportChatWidget from "./components/SupportChatWidget";
+import SupportTickets from "./pages/11.SupportTickets/SupportTickets";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
           <Route path="/direct-messages" element={<DirectMessages />} />
           <Route path="/notifications" element={<Notifications />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/support-tickets" element={<SupportTickets />} />
         </Route>
         
         <Route element={<OrdinaryRoutes />}>
