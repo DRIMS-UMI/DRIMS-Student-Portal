@@ -5,6 +5,7 @@ import { AuthContext } from '../store/context/AuthContext';
 import { useGetLoggedInUser, useGetUnreadMessageCount } from '../store/tanstackStore/services/queries';
 import { useQueryClient } from '@tanstack/react-query';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const Sidebar = ({ onClose }) => {
   const location = useLocation();
@@ -70,13 +71,22 @@ const Sidebar = ({ onClose }) => {
             {userData?.user?.name?.charAt(0)}
           </AvatarFallback>
         </Avatar>
-        <div className="flex flex-col items-start">
-          <span className="font-semibold text-gray-800 text-xs leading-tight">
+        <div className="flex flex-col items-start min-w-0">
+          <span className="font-semibold text-gray-800 text-xs leading-tight truncate w-full">
             {userData?.user?.name || 'Student'}
           </span>
-          <span className="text-xs text-gray-500">
-            {userData?.user?.studentId || 'Student ID'}
-          </span>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="text-[10px] text-gray-500 truncate w-full cursor-default">
+                  {userData?.user?.registrationNumber || 'Student ID'}
+                </span>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" align="start" className="bg-white text-gray-700 border border-gray-200 shadow-lg">
+                <p className="text-xs">{userData?.user?.registrationNumber || 'Student ID'}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
       {/* Main Activities */}
