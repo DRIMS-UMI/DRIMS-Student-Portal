@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { useGetLoggedInUser } from '../../store/tanstackStore/services/queries';
+import { useGetLoggedInUser, useGetStudentDocuments } from '../../store/tanstackStore/services/queries';
 import DocumentUpload from './DocumentUpload';
 import DocumentList from './DocumentList';
 import DocumentPreview from './DocumentPreview';
 
 const Documents = () => {
   const { data: userData } = useGetLoggedInUser();
+  const { data: documentsResponse } = useGetStudentDocuments();
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
 
-  console.log('Documents page rendering, userData:', userData);
+  const allDocuments = documentsResponse?.documents || [];
 
   return (
     <div className="p-2 sm:p-4 md:p-6">
@@ -37,7 +38,6 @@ const Documents = () => {
           <div className="bg-white rounded-2xl shadow-md p-4 md:p-5">
             <DocumentList 
               onDocumentSelect={(doc) => {
-                console.log('Document selected:', doc);
                 setSelectedDocument(doc);
                 setShowPreview(true);
               }}
@@ -50,6 +50,7 @@ const Documents = () => {
       {showPreview && selectedDocument && (
         <DocumentPreview
           document={selectedDocument}
+          allDocuments={allDocuments}
           onClose={() => {
             setShowPreview(false);
             setSelectedDocument(null);
