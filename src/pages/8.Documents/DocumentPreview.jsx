@@ -78,7 +78,7 @@ const DocumentPreview = ({ document: documentRecord, allDocuments = [], onClose 
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+        <div className="flex items-center justify-between p-4 lg:p-6 border-b border-gray-200">
           <h2 className="text-xl font-semibold text-gray-900">Document Details</h2>
           <button
             onClick={onClose}
@@ -91,7 +91,7 @@ const DocumentPreview = ({ document: documentRecord, allDocuments = [], onClose 
         </div>
 
         {/* Content */}
-        <div className="p-6 space-y-6">
+        <div className="p-4 lg:p-6 space-y-6">
           {/* Document Info Panel */}
           <div className="bg-gray-50 rounded-lg p-4">
             <h3 className="font-medium text-gray-900 mb-2">Document Information</h3>
@@ -153,13 +153,13 @@ const DocumentPreview = ({ document: documentRecord, allDocuments = [], onClose 
                     {documentRecord.type === 'REVIEWED' ? 'Reviewed File:' : 'Original Submitted File:'}
                 </h4>
                 <div className="flex flex-col gap-3 bg-white p-3 rounded border border-green-100">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
                     <div className="flex items-center gap-3">
-                      <svg className="w-8 h-8 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                      <svg className="w-8 h-8 text-gray-400 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
                       </svg>
-                      <div>
-                        <p className="text-sm font-medium text-gray-900 truncate max-w-xs" title={documentRecord.fileName || documentRecord.title}>
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate max-w-[200px] lg:max-w-xs" title={documentRecord.fileName || documentRecord.title}>
                           {documentRecord.fileName || documentRecord.title}
                         </p>
                         {documentRecord.fileSize && (
@@ -170,7 +170,7 @@ const DocumentPreview = ({ document: documentRecord, allDocuments = [], onClose 
                     <button
                       onClick={() => handleDownload()}
                       disabled={downloadingId === documentRecord.id}
-                      className="px-4 py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center gap-2 cursor-pointer"
+                      className="px-3 py-1.5 lg:px-4 lg:py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center gap-2 cursor-pointer self-start lg:self-auto"
                     >
                       {downloadingId === documentRecord.id ? (
                         <>
@@ -178,14 +178,14 @@ const DocumentPreview = ({ document: documentRecord, allDocuments = [], onClose 
                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                           </svg>
-                          Downloading...
+                          <span className="hidden lg:inline">Downloading...</span>
                         </>
                       ) : (
                         <>
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                           </svg>
-                          Download
+                          <span className="hidden lg:inline">Download</span>
                         </>
                       )}
                     </button>
@@ -208,13 +208,13 @@ const DocumentPreview = ({ document: documentRecord, allDocuments = [], onClose 
                   <div className="space-y-3">
                     {relatedReviews.map((reviewDoc) => (
                       <div key={reviewDoc.id} className="flex flex-col gap-3 bg-white p-3 rounded border border-green-100">
-                        <div className="flex items-center justify-between">
+                        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
                           <div className="flex items-center gap-3">
-                            <svg className="w-8 h-8 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                            <svg className="w-8 h-8 text-green-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                               <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
                             </svg>
-                            <div>
-                              <p className="text-sm font-medium text-gray-900 truncate max-w-xs" title={reviewDoc.fileName || reviewDoc.title}>
+                            <div className="min-w-0">
+                              <p className="text-sm font-medium text-gray-900 truncate max-w-[200px] lg:max-w-xs" title={reviewDoc.fileName || reviewDoc.title}>
                                 {reviewDoc.fileName || reviewDoc.title}
                               </p>
                               <div className="flex items-center gap-2 text-xs text-gray-500 mt-0.5">
@@ -233,7 +233,7 @@ const DocumentPreview = ({ document: documentRecord, allDocuments = [], onClose 
                           <button
                             onClick={() => handleDownload(reviewDoc.id, reviewDoc.fileName || reviewDoc.title)}
                             disabled={downloadingId === reviewDoc.id}
-                            className="px-3 py-1.5 text-sm font-medium text-green-700 bg-green-50 border border-green-200 rounded-md hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center gap-2 cursor-pointer"
+                            className="px-3 py-1.5 lg:px-4 lg:py-2 text-sm font-medium text-green-700 bg-green-50 border border-green-200 rounded-md hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center gap-2 cursor-pointer self-start lg:self-auto"
                           >
                             {downloadingId === reviewDoc.id ? (
                               <svg className="w-4 h-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -245,7 +245,7 @@ const DocumentPreview = ({ document: documentRecord, allDocuments = [], onClose 
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                               </svg>
                             )}
-                            Download
+                            <span className="hidden lg:inline">Download</span>
                           </button>
                         </div>
                         {(reviewDoc.reviewComments || reviewDoc.description) && (

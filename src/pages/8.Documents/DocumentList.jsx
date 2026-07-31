@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { format } from 'date-fns';
+import { format, addDays, differenceInDays } from 'date-fns';
 import { toast } from 'sonner';
 import { downloadDocumentService } from '../../store/tanstackStore/services/api';
 import { useGetStudentDocuments } from '../../store/tanstackStore/services/queries';
@@ -144,8 +144,14 @@ const DocumentList = ({ onDocumentSelect }) => {
     const matchesFilter = filter === 'ALL'
       ? doc.type !== 'REVIEWED'
       : doc.type === filter;
-    const matchesSearch = doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      doc.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    const s = searchTerm.toLowerCase();
+    const matchesSearch = s === '' ||
+      doc.title.toLowerCase().includes(s) ||
+      doc.description?.toLowerCase().includes(s) ||
+      (doc.supervisor && `${doc.supervisor.title} ${doc.supervisor.name}`.toLowerCase().includes(s)) ||
+      (doc.fileName && doc.fileName.toLowerCase().includes(s)) ||
+      getDocumentTypeLabel(doc.type).toLowerCase().includes(s) ||
+      (doc.isReviewed ? 'reviewed' : 'unreviewed').includes(s);
     return matchesFilter && matchesSearch;
   }) || [];
 
@@ -254,17 +260,36 @@ const DocumentList = ({ onDocumentSelect }) => {
         </div>
       ) : (
         <div className="space-y-3">
-          {sortedDocuments.map((document) => (
+          {sortedDocuments.map((document) => {
+            const dueDate = addDays(new Date(document.uploadedAt), 14);
+            const daysLeft = differenceInDays(dueDate, new Date());
+            let dueTextClass = 'text-gray-500';
+            let dueLabel = `Due in ${daysLeft} days`;
+
+            let cardBorderClass = 'border border-gray-200 hover:bg-gray-100';
+
+            if (document.isReviewed) {
+              cardBorderClass = 'border border-green-200 border-l-[4px] border-l-green-500 bg-green-50/50 hover:bg-green-50';
+            } else if (daysLeft < 0) {
+              dueTextClass = 'text-red-600 font-medium';
+              dueLabel = `Overdue by ${Math.abs(daysLeft)} days`;
+              cardBorderClass = 'border border-red-200 border-l-[4px] border-l-red-500 bg-red-50/50 hover:bg-red-50';
+            } else if (daysLeft === 0) {
+              dueTextClass = 'text-orange-500 font-medium';
+              dueLabel = 'Due today';
+              cardBorderClass = 'border border-orange-200 border-l-[4px] border-l-orange-500 bg-orange-50/50 hover:bg-orange-50';
+            } else if (daysLeft <= 3) {
+              dueTextClass = 'text-orange-500 font-medium';
+              cardBorderClass = 'border border-orange-200 border-l-[4px] border-l-orange-500 bg-orange-50/50 hover:bg-orange-50';
+            }
+
+            return (
             <div
               key={document.id}
-              className={`rounded-lg p-4 transition-colors cursor-pointer ${
-                document.isReviewed
-                  ? 'border border-green-200 border-l-[4px] border-l-green-500 bg-green-50/50 hover:bg-green-50'
-                  : 'border border-gray-200 hover:bg-gray-100'
-              }`}
+              className={`rounded-lg p-3 lg:p-4 transition-colors cursor-pointer ${cardBorderClass}`}
               onClick={() => onDocumentSelect(document)}
             >
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-2">
                     <h3 className="text-sm font-medium text-gray-900 truncate">
@@ -286,7 +311,7 @@ const DocumentList = ({ onDocumentSelect }) => {
                     </p>
                   )}
 
-                  <div className="flex items-center gap-4 text-xs text-gray-500">
+                  <div className="flex flex-wrap items-center gap-x-2 gap-y-1 lg:gap-4 text-xs text-gray-500">
                     <span>Uploaded: {format(new Date(document.uploadedAt), 'MMM dd, yyyy h:mm a')}</span>
                     {document.uploadedBy && (
                       <span>By: {document.uploadedBy.name}</span>
@@ -297,24 +322,29 @@ const DocumentList = ({ onDocumentSelect }) => {
                     {document.supervisor && (
                       <span>To: {document.supervisor.title} {document.supervisor.name}</span>
                     )}
+                    {document.reviewedAt ? (
+                      <span>Reviewed: {format(new Date(document.reviewedAt), 'MMM dd, yyyy h:mm a')}</span>
+                    ) : (
+                      <span className={dueTextClass}>{dueLabel}</span>
+                    )}
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 ml-4">
+                <div className="flex items-center gap-2 lg:ml-4">
                   {document.isReviewed ? (
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         onDocumentSelect(document);
                       }}
-                      className="px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 rounded-md transition-colors flex items-center gap-2 shadow-sm cursor-pointer"
+                      className="px-3 py-1.5 lg:px-4 lg:py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 rounded-md transition-colors flex items-center gap-1 lg:gap-2 shadow-sm cursor-pointer"
                       title="View review"
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                       </svg>
-                      View Review
+                      <span className="hidden lg:inline">View Review</span>
                     </button>
                   ) : (
                     <button
@@ -322,14 +352,14 @@ const DocumentList = ({ onDocumentSelect }) => {
                         e.stopPropagation();
                         onDocumentSelect(document);
                       }}
-                      className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md transition-colors flex items-center gap-2 shadow-sm cursor-pointer"
+                      className="px-3 py-1.5 lg:px-4 lg:py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded-md transition-colors flex items-center gap-1 lg:gap-2 shadow-sm cursor-pointer"
                       title="View document"
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                       </svg>
-                      View
+                      <span className="hidden lg:inline">View</span>
                     </button>
                   )}
                   {!document.isReviewed && (
@@ -339,26 +369,27 @@ const DocumentList = ({ onDocumentSelect }) => {
                         handleDownload(document);
                       }}
                       disabled={downloadMutation.isPending}
-                      className="px-4 py-2 text-sm font-medium bg-white border border-gray-300 rounded-md transition-colors flex items-center gap-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="px-3 py-1.5 lg:px-4 lg:py-2 text-sm font-medium bg-white border border-gray-300 rounded-md transition-colors flex items-center gap-1 lg:gap-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                       title="Download document"
                     >
                       {downloadMutation.isPending ? (
-                        <svg className="w-4 h-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 shrink-0 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
                       ) : (
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                       )}
-                      {downloadMutation.isPending ? 'Downloading...' : 'Download'}
+                      <span className="hidden lg:inline">{downloadMutation.isPending ? 'Downloading...' : 'Download'}</span>
                     </button>
                   )}
                 </div>
               </div>
             </div>
-          ))}
+          );
+        })}
         </div>
       )}
     </div>
