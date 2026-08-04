@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { format, addDays, differenceInDays } from 'date-fns';
 import { toast } from 'sonner';
 import { downloadDocumentService } from '../../store/tanstackStore/services/api';
-import { useGetStudentDocuments } from '../../store/tanstackStore/services/queries';
+import { useGetStudentDocuments, useDeleteStudentDocument } from '../../store/tanstackStore/services/queries';
 import { useSocket } from '../../hooks/useSocket';
 import { queryClient } from '../../utils/tanstack';
 
@@ -14,15 +14,18 @@ const DocumentList = ({ onDocumentSelect }) => {
   const [socketEvent, setSocketEvent] = useState(null);
   const [forceUpdate, setForceUpdate] = useState(0);
   const [downloadingId, setDownloadingId] = useState(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+  const [deletingId, setDeletingId] = useState(false);
 
   const { data: response, isLoading, error, refetch } = useGetStudentDocuments();
+  const deleteMutation = useDeleteStudentDocument();
 
   // Extract documents array from the response
   const documents = response?.documents || [];
 
   // Socket event handler to update state
   const handleDocumentUpdate = useCallback((data) => {
-    if (data.type === 'document_upload_success' || data.type === 'new_document_uploaded') {
+    if (data.type === 'document_upload_success' || data.type === 'new_document_uploaded' || data.type === 'document_reviewed' || data.type === 'document_deleted') {
       setSocketEvent(data);
     }
   }, []);
@@ -126,6 +129,27 @@ const DocumentList = ({ onDocumentSelect }) => {
         return 'bg-gray-100 text-gray-800';
       default:
         return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const canDeleteDocument = (doc) => {
+    if (doc.isReviewed || doc.type === 'REVIEWED') return false;
+    const THREE_HOURS_MS = 3 * 60 * 60 * 1000;
+    return Date.now() - new Date(doc.uploadedAt).getTime() <= THREE_HOURS_MS;
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!confirmDeleteId) return;
+    setDeletingId(true);
+    try {
+      await deleteMutation.mutateAsync(confirmDeleteId);
+      toast.success('Document deleted successfully');
+      setConfirmDeleteId(null);
+    } catch (error) {
+      toast.error(error.message || 'Failed to delete document');
+      setConfirmDeleteId(null);
+    } finally {
+      setDeletingId(false);
     }
   };
 
@@ -389,11 +413,64 @@ const DocumentList = ({ onDocumentSelect }) => {
                       <span className="hidden lg:inline">{downloadingId === document.id ? 'Downloading...' : 'Download'}</span>
                     </button>
                   )}
+                  {canDeleteDocument(document) && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setConfirmDeleteId(document.id);
+                      }}
+                      className="px-3 py-1.5 lg:px-4 lg:py-2 text-sm font-medium bg-white border border-red-300 rounded-md transition-colors flex items-center gap-1 lg:gap-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 cursor-pointer text-red-600 hover:bg-red-50"
+                      title="Delete document (available within 3 hours of upload)"
+                    >
+                      <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                      <span className="hidden lg:inline">Delete</span>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
           );
         })}
+        </div>
+      )}
+
+      {confirmDeleteId && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+          onClick={() => setConfirmDeleteId(null)}
+        >
+          <div
+            className="bg-white rounded-xl shadow-xl p-5 max-w-sm w-full mx-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-base font-semibold text-gray-900">Delete document?</h3>
+            <p className="text-sm text-gray-600 mt-2">
+              This will permanently remove the document. This action cannot be undone.
+            </p>
+            <div className="flex justify-end gap-2 mt-5">
+              <button
+                onClick={() => setConfirmDeleteId(null)}
+                className="px-4 py-2 text-sm font-medium bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmDelete}
+                disabled={deletingId}
+                className="px-4 py-2 text-sm font-medium bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+              >
+                {deletingId && (
+                  <svg className="w-4 h-4 shrink-0 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                )}
+                Delete
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

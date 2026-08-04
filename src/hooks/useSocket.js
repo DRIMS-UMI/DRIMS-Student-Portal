@@ -75,6 +75,16 @@ export function useSocket(onMessage, onUserStatusChange, onTyping) {
       console.log('Calling handleMessage with data:', data);
       handleMessage(data);
     });
+    socket.on('document_reviewed', (data) => {
+      console.log('Document reviewed event received:', data);
+      console.log('Calling handleMessage with data:', data);
+      handleMessage(data);
+    });
+    socket.on('document_deleted', (data) => {
+      console.log('Document deleted event received:', data);
+      console.log('Calling handleMessage with data:', data);
+      handleMessage(data);
+    });
 
     // Connection event handlers
     socket.on('connect', () => {
@@ -112,6 +122,8 @@ export function useSocket(onMessage, onUserStatusChange, onTyping) {
       socket.off('user_typing', handleTyping);
       socket.off('document_upload_success', handleMessage);
       socket.off('new_document_uploaded', handleMessage);
+      socket.off('document_reviewed', handleMessage);
+      socket.off('document_deleted', handleMessage);
       socket.off('connect');
       socket.off('disconnect');
       socket.off('connect_error');

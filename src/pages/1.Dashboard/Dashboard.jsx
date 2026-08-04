@@ -4,6 +4,7 @@ import DashboardTimeline from './DashboardTimeline';
 import DashboardStatusReport from './DashboardStatusReport';
 import DashboardDirectMessages from './DashboardDirectMessages';
 import DashboardRecentResearchRequests from './DashboardRecentResearchRequests';
+import DashboardRecentDocuments from './DashboardRecentDocuments';
 import { useGetLoggedInUser } from '../../store/tanstackStore/services/queries';
 
 const Dashboard = () => {
@@ -41,9 +42,14 @@ const Dashboard = () => {
             <DashboardDirectMessages />
           </div>
         </div>
-        {/* Right column: Recent Research Requests */}
-        <div className="bg-white rounded-2xl shadow-md p-4 md:p-5 h-full min-h-[500px] flex flex-col w-full">
-          <DashboardRecentResearchRequests />
+        {/* Right column: Recent Research Requests + Recent Documents */}
+        <div className="flex flex-col gap-4 h-full w-full">
+          <div className="bg-white rounded-2xl shadow-md p-4 md:p-5 h-full min-h-[300px] flex flex-col w-full">
+            <DashboardRecentResearchRequests />
+          </div>
+          <div className="bg-white rounded-2xl shadow-md p-4 md:p-5 h-full min-h-[200px] max-h-[320px] flex flex-col w-full">
+            <DashboardRecentDocuments />
+          </div>
         </div>
       </div>
     </div>

@@ -20,6 +20,7 @@ import {
   submitStudentEvaluationService,
   getStudentEvaluationsService,
   getStudentDocumentsService,
+  deleteDocumentService,
   getAvailableResearchClinicDaysService,
   bookResearchClinicSessionService,
   getStudentResearchClinicBookingsService,
@@ -247,6 +248,15 @@ export const useGetStudentDocuments = () => {
     // staleTime: 0, // Always consider data stale to ensure fresh data
     // refetchInterval: false, // Don't auto-refetch, rely on manual invalidation
     // refetchOnReconnect: true
+  });
+};
+
+export const useDeleteStudentDocument = () => {
+  return useMutation({
+    mutationFn: deleteDocumentService,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['studentDocuments'] });
+    }
   });
 };
 
