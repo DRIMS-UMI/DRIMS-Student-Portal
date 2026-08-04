@@ -5,11 +5,11 @@ import { queryClient } from "../../../utils/tanstack"
 
 const errorHandling = (error: any) => {
     if (error?.response) {
-        throw {message: `Error ${error.response.status}: ${error.response.statusText}. ${error.response?.data?.message}`}
+        throw { message: `Error ${error.response.status}: ${error.response.statusText}. ${error.response?.data?.message}` }
     } else if (error.request) {
-        throw {message: "No response from server. Please check your network connection."}
+        throw { message: "No response from server. Please check your network connection." }
     } else {
-        throw {message: `Request failed: ${error.message}`}
+        throw { message: `Request failed: ${error.message}` }
     }
 }
 
@@ -141,7 +141,7 @@ export const getStudentResearchRequestsService = async () => {
 export const createStudentResearchRequestService = async (data: any) => {
     try {
         const response = await apiRequest.post("/student/research-requests", data);
-        queryClient.invalidateQueries({queryKey: ['studentResearchRequests']});
+        queryClient.invalidateQueries({ queryKey: ['studentResearchRequests'] });
         return response.data;
     } catch (error) {
         errorHandling(error);
@@ -171,8 +171,8 @@ export const getAvailableEvaluationsService = async () => {
 export const submitStudentEvaluationService = async (evaluationData: any) => {
     try {
         const response = await apiRequest.post("/student/evaluations", evaluationData);
-        queryClient.invalidateQueries({queryKey: ['availableEvaluations']});
-        queryClient.invalidateQueries({queryKey: ['studentEvaluations']});
+        queryClient.invalidateQueries({ queryKey: ['availableEvaluations'] });
+        queryClient.invalidateQueries({ queryKey: ['studentEvaluations'] });
         return response.data;
     } catch (error) {
         errorHandling(error);
@@ -193,6 +193,20 @@ export const getStudentEvaluationsService = async () => {
 export const uploadDocumentService = async (formData: FormData) => {
     try {
         const response = await apiRequest.post("/student/documents", formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            timeout: 60000,
+        });
+        return response.data;
+    } catch (error) {
+        errorHandling(error);
+    }
+};
+
+export const checkDocumentPageCountService = async (formData: FormData) => {
+    try {
+        const response = await apiRequest.post("/student/documents/check-page-count", formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             }

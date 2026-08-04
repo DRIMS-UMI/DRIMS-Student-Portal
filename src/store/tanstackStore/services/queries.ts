@@ -1,14 +1,14 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { queryClient } from '../../../utils/tanstack';
-import { 
-  loginStudentService, 
+import {
+  loginStudentService,
   getLoggedInUserService,
-  getStudentProfileService, 
-  updateStudentProfileService, 
-  changeStudentPasswordService, 
-  getStudentDashboardStatsService, 
-  getStudentNotificationsService, 
-  markStudentNotificationAsReadService, 
+  getStudentProfileService,
+  updateStudentProfileService,
+  changeStudentPasswordService,
+  getStudentDashboardStatsService,
+  getStudentNotificationsService,
+  markStudentNotificationAsReadService,
   logoutStudentService,
   getStudentStatusesService,
   getStudentProposalsService,
@@ -171,7 +171,7 @@ export const useLogoutStudentMutation = () => {
       console.error('Student logout failed:', error);
     },
   });
-}; 
+};
 
 // --- RESEARCH REQUESTS ---
 
@@ -242,13 +242,13 @@ export const useGetStudentDocuments = () => {
   return useQuery({
     queryKey: ['studentDocuments'],
     queryFn: getStudentDocumentsService,
-    refetchOnMount: true,
-    refetchOnWindowFocus: true,
-    staleTime: 0, // Always consider data stale to ensure fresh data
-    refetchInterval: false, // Don't auto-refetch, rely on manual invalidation
-    refetchOnReconnect: true
+    // refetchOnMount: true,
+    // refetchOnWindowFocus: true,
+    // staleTime: 0, // Always consider data stale to ensure fresh data
+    // refetchInterval: false, // Don't auto-refetch, rely on manual invalidation
+    // refetchOnReconnect: true
   });
-}; 
+};
 
 /* ********** RESEARCH CLINIC ********** */
 
@@ -288,7 +288,7 @@ export const useCancelResearchClinicBooking = () => {
       queryClient.invalidateQueries({ queryKey: ['studentResearchClinicBookings'] });
     },
   });
-}; 
+};
 
 /* ********** APPOINTMENTS ********** */
 
