@@ -128,12 +128,14 @@ const DirectMessages = () => {
 
       // Reload messages to get updated readBy arrays
       loadMessages(conversationId);
+      // Reload conversations to clear the unread badge for this conversation
+      loadConversations();
       // Invalidate unread message count
       queryClient.invalidateQueries({ queryKey: ['unreadMessageCount'] });
     } catch (err) {
       console.error('Failed to mark messages as read:', err);
     }
-  }, [loadMessages, queryClient]);
+  }, [loadMessages, loadConversations, queryClient]);
 
   // ========================================
   // PRINT FUNCTIONALITY
@@ -776,7 +778,7 @@ const DirectMessages = () => {
                   {/* Conversation Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <div className="font-medium truncate text-gray-900">{c.otherParticipant?.name}</div>
+                      <div className={`truncate ${c.unreadCount > 0 ? 'font-semibold text-gray-900' : 'font-medium text-gray-900'}`}>{c.otherParticipant?.name}</div>
                       {isUserOnline(c.otherParticipant?.id) && (
                         <span className="text-xs text-green-600 font-medium">Online</span>
                       )}
@@ -786,9 +788,16 @@ const DirectMessages = () => {
                     </div>
                   </div>
 
-                  {/* Timestamp */}
-                  <div className="text-xs text-gray-400">
-                    {c.lastMessage?.createdAt ? format(new Date(c.lastMessage.createdAt), 'MMM dd') : ''}
+                  {/* Timestamp + Unread Count */}
+                  <div className="flex flex-col items-end gap-1">
+                    <div className="text-xs text-gray-400">
+                      {c.lastMessage?.createdAt ? format(new Date(c.lastMessage.createdAt), 'MMM dd') : ''}
+                    </div>
+                    {c.unreadCount > 0 && (
+                      <span className="inline-flex items-center justify-center min-w-[18px] h-5 px-1.5 rounded-full bg-[#23388F] text-white text-[10px] font-medium">
+                        {c.unreadCount}
+                      </span>
+                    )}
                   </div>
                 </div>
               ))
