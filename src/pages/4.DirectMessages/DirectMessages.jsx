@@ -21,7 +21,7 @@ function formatDate(date) {
 
 const fetchWithAuth = async (url, options = {}) => {
   const token = localStorage.getItem('umi_student_auth_token') || localStorage.getItem('token');
-  const headers = { ...(options.headers || {}), Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': 'true' }; // [ngrok]
+  const headers = { ...(options.headers || {}), Authorization: `Bearer ${token}` };
   const res = await fetch(url, { ...options, headers });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
@@ -529,8 +529,7 @@ const DirectMessages = () => {
       setError('');
       fetch(`${API_URL}/student/supervisors-for-messaging`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('umi_student_auth_token')}`,
-          'ngrok-skip-browser-warning': 'true' // [ngrok]
+          Authorization: `Bearer ${localStorage.getItem('umi_student_auth_token')}`
         }
       })
         .then(res => res.json())
@@ -654,8 +653,7 @@ const DirectMessages = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('umi_student_auth_token')}`,
-          'ngrok-skip-browser-warning': 'true' // [ngrok]
+          Authorization: `Bearer ${localStorage.getItem('umi_student_auth_token')}`
         },
         body: JSON.stringify({ participantId: supervisor.id })
       });

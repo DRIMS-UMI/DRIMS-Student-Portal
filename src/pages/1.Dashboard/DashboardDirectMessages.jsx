@@ -27,8 +27,7 @@ const DashboardDirectMessages = () => {
       const token = localStorage.getItem('umi_student_auth_token') || localStorage.getItem('token');
       const response = await fetch(`${API_URL}/messages/conversations`, {
         headers: {
-          Authorization: `Bearer ${token}`,
-          'ngrok-skip-browser-warning': 'true' // [ngrok]
+          Authorization: `Bearer ${token}`
         }
       });
 

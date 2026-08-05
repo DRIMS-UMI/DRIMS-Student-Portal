@@ -30,7 +30,6 @@ const SupportChatWidget = () => {
     const tempSocket = io(socketUrl, {
       query: { isGuest: 'true' }, // Minimal connection just to check status
       transports: ["websocket", "polling"],
-      extraHeaders: { 'ngrok-skip-browser-warning': 'true' }, // [ngrok]
     });
 
     tempSocket.on('connect', () => {
@@ -92,7 +91,6 @@ const SupportChatWidget = () => {
       const chatSocket = io(socketUrl, {
         ...authOpts,
         transports: ["websocket", "polling"],
-        extraHeaders: { 'ngrok-skip-browser-warning': 'true' }, // [ngrok]
       });
 
       chatSocket.on('connect', () => {
