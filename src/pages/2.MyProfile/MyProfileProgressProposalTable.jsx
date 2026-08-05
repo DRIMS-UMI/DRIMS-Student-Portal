@@ -40,7 +40,7 @@ const MyProfileProgressProposalTable = ({
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
 
-  console.log('proposals', proposals);
+
 
   const columnHelper = createColumnHelper();
 

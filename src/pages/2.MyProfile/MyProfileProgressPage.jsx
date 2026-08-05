@@ -44,7 +44,7 @@ const MyProfileProgressPage = ({ studentData }) => {
 
   const student = studentData?.student;
 
-  console.log(student)
+
 
   if (!student) {
     return (
@@ -89,10 +89,10 @@ const MyProfileProgressPage = ({ studentData }) => {
     );
     const expectedDays = student?.expectedCompletionDate
       ? Math.ceil(
-          (new Date(student?.expectedCompletionDate) -
-            enrollmentDate) /
-            (1000 * 60 * 60 * 24)
-        )
+        (new Date(student?.expectedCompletionDate) -
+          enrollmentDate) /
+        (1000 * 60 * 60 * 24)
+      )
       : null;
     return { totalDays, enrollmentDate, expectedDays };
   }, [
@@ -219,7 +219,7 @@ const MyProfileProgressPage = ({ studentData }) => {
 
   // TanStack Table for Supervisors
   const columnHelper = createColumnHelper();
-  
+
   const supervisorColumns = [
     columnHelper.accessor("name", {
       header: "Name",
@@ -245,7 +245,7 @@ const MyProfileProgressPage = ({ studentData }) => {
         </span>
       ),
     }),
-   
+
     columnHelper.accessor("id", {
       header: "Actions",
       cell: (info) => {
@@ -266,7 +266,7 @@ const MyProfileProgressPage = ({ studentData }) => {
   ];
 
   const supervisorsData = student?.supervisors || [];
-  
+
   const supervisorsTable = useReactTable({
     data: supervisorsData,
     columns: supervisorColumns,
@@ -287,12 +287,12 @@ const MyProfileProgressPage = ({ studentData }) => {
           </h3>
           <div className="flex gap-2">
             <div className="flex flex-col">
-              {currentSupervisor && currentSupervisor.length > 0 
+              {currentSupervisor && currentSupervisor.length > 0
                 ? currentSupervisor.map((supervisor) => (
-                    <span key={supervisor.id} className="text-sm font-[Inter-Regular] text-gray-900">
-                      {supervisor.title} {supervisor.name}
-                    </span>
-                  ))
+                  <span key={supervisor.id} className="text-sm font-[Inter-Regular] text-gray-900">
+                    {supervisor.title} {supervisor.name}
+                  </span>
+                ))
                 : <span className="text-sm font-[Inter-Regular] text-gray-900">No supervisor assigned</span>}
             </div>
           </div>
@@ -307,9 +307,8 @@ const MyProfileProgressPage = ({ studentData }) => {
               color: currentStatus?.definition?.color || "#6B7280",
               backgroundColor:
                 `${currentStatus?.definition?.color}18` || "#F3F4F6",
-              border: `1px solid ${
-                currentStatus?.definition?.color || "#6B7280"
-              }`,
+              border: `1px solid ${currentStatus?.definition?.color || "#6B7280"
+                }`,
             }}
             className="inline-flex px-2 py-0.5 rounded-[4px] text-sm font-[Inter-Regular] capitalize"
           >
@@ -425,16 +424,16 @@ const MyProfileProgressPage = ({ studentData }) => {
                 {supervisorsTable.getHeaderGroups().map(headerGroup => (
                   <tr key={headerGroup.id} className="bg-gray-50">
                     {headerGroup.headers.map(header => (
-                      <th 
+                      <th
                         key={header.id}
                         className="text-left py-3 px-3 text-sm font-[Inter-Medium] text-gray-500 border-b"
                       >
                         {header.isPlaceholder
                           ? null
                           : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                       </th>
                     ))}
                   </tr>
@@ -444,7 +443,7 @@ const MyProfileProgressPage = ({ studentData }) => {
                 {supervisorsTable.getRowModel().rows.map(row => (
                   <tr key={row.id} className="border-b hover:bg-gray-50">
                     {row.getVisibleCells().map(cell => (
-                      <td 
+                      <td
                         key={cell.id}
                         className="py-2 px-3 text-sm font-[Inter-Regular] text-gray-900"
                       >
@@ -542,14 +541,14 @@ const MyProfileProgressPage = ({ studentData }) => {
                   <div className="flex items-center justify-between">
                     <h2 className="text-lg font-[Inter-Bold] text-gray-900">Supervisor Details</h2>
                     <button
-                       onClick={() => setIsSupervisorDrawerOpen(false)}
-                        className="bg-primary-500 text-white rounded-lg hover:bg-primary-800 flex items-center justify-center whitespace-nowrap text-sm"
-                        style={{ width: "148px", height: "36px", gap: "8px" }}
-                      >
-                        <HiX className="w-4 h-4 flex-shrink-0" />
-                        <span className="flex-shrink-0 text-sm">Close Window</span>
-                      </button>
-                  
+                      onClick={() => setIsSupervisorDrawerOpen(false)}
+                      className="bg-primary-500 text-white rounded-lg hover:bg-primary-800 flex items-center justify-center whitespace-nowrap text-sm"
+                      style={{ width: "148px", height: "36px", gap: "8px" }}
+                    >
+                      <HiX className="w-4 h-4 flex-shrink-0" />
+                      <span className="flex-shrink-0 text-sm">Close Window</span>
+                    </button>
+
                   </div>
                 </div>
 

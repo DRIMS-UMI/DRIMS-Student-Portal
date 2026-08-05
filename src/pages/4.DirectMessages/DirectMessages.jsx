@@ -21,7 +21,7 @@ function formatDate(date) {
 
 const fetchWithAuth = async (url, options = {}) => {
   const token = localStorage.getItem('umi_student_auth_token') || localStorage.getItem('token');
-  const headers = { ...(options.headers || {}), Authorization: `Bearer ${token}` };
+  const headers = { ...(options.headers || {}), Authorization: `Bearer ${token}`, 'ngrok-skip-browser-warning': 'true' }; // [ngrok]
   const res = await fetch(url, { ...options, headers });
   if (!res.ok) throw new Error(await res.text());
   return res.json();
@@ -126,16 +126,16 @@ const DirectMessages = () => {
       });
       console.log('Successfully marked messages as read');
 
-      // Reload messages to get updated readBy arrays
-      loadMessages(conversationId);
-      // Reload conversations to clear the unread badge for this conversation
-      loadConversations();
+      // Clear the unread badge for this conversation without a full reload
+      setConversations(prev =>
+        prev.map(c => (c.id === conversationId ? { ...c, unreadCount: 0 } : c))
+      );
       // Invalidate unread message count
       queryClient.invalidateQueries({ queryKey: ['unreadMessageCount'] });
     } catch (err) {
       console.error('Failed to mark messages as read:', err);
     }
-  }, [loadMessages, loadConversations, queryClient]);
+  }, [queryClient]);
 
   // ========================================
   // PRINT FUNCTIONALITY
@@ -378,7 +378,7 @@ const DirectMessages = () => {
   }, [selected?.id, loadConversations, markMessagesAsRead, queryClient]);
 
   const handleUserStatusChange = useCallback((data) => {
-    console.log('User status change:', data);
+
 
     if (data.onlineUsers) {
       // Handle bulk online users update
@@ -529,7 +529,8 @@ const DirectMessages = () => {
       setError('');
       fetch(`${API_URL}/student/supervisors-for-messaging`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('umi_student_auth_token')}`
+          Authorization: `Bearer ${localStorage.getItem('umi_student_auth_token')}`,
+          'ngrok-skip-browser-warning': 'true' // [ngrok]
         }
       })
         .then(res => res.json())
@@ -647,22 +648,21 @@ const DirectMessages = () => {
     setLoading(true);
     setError('');
     try {
-      console.log('Creating conversation with supervisor:', supervisor);
-      console.log('Supervisor ID being sent:', supervisor.id);
-      console.log('Current user ID:', currentUserId);
+
 
       const res = await fetch(`${API_URL}/messages/conversations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('umi_student_auth_token')}`
+          Authorization: `Bearer ${localStorage.getItem('umi_student_auth_token')}`,
+          'ngrok-skip-browser-warning': 'true' // [ngrok]
         },
         body: JSON.stringify({ participantId: supervisor.id })
       });
 
-      console.log('Response status:', res.status);
+
       const data = await res.json();
-      console.log('Response data:', data);
+
 
       if (!res.ok) throw new Error(data.error || 'Failed to start conversation');
       setIsModalOpen(false);

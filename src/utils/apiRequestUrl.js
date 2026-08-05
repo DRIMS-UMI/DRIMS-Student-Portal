@@ -1,13 +1,16 @@
 import axios from 'axios';
 
 //export const BASE_API_URL = "https://drimsapi.alero.digital/api/v1";
-//export const BASE_API_URL = 'http://localhost:5000/api/v1';
-export const BASE_API_URL = 'https://drimsapi.umi.ac.ug/api/v1';
+// [ngrok] 
+export const BASE_API_URL = 'https://5ca7-102-86-12-127.ngrok-free.app/api/v1';
+//export const BASE_API_URL = 'https://drimsapi.umi.ac.ug/api/v1';
 
 const apiRequest = axios.create({
   baseURL: BASE_API_URL,
   timeout: 10000,
 });
+
+apiRequest.defaults.headers.common['ngrok-skip-browser-warning'] = 'true'; // [ngrok]
 
 // Request interceptor to add auth token
 apiRequest.interceptors.request.use(

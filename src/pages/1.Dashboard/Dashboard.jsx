@@ -5,6 +5,12 @@ import DashboardStatusReport from './DashboardStatusReport';
 import DashboardDirectMessages from './DashboardDirectMessages';
 import DashboardRecentResearchRequests from './DashboardRecentResearchRequests';
 import DashboardRecentDocuments from './DashboardRecentDocuments';
+import DashboardUpcomingAppointments from './DashboardUpcomingAppointments';
+import DashboardUpcomingResearchClinic from './DashboardUpcomingResearchClinic';
+import DashboardIdentityStrip from './DashboardIdentityStrip';
+import DashboardStats from './DashboardStats';
+import DashboardQuickActions from './DashboardQuickActions';
+import DashboardNeedsAttention from './DashboardNeedsAttention';
 import { useGetLoggedInUser } from '../../store/tanstackStore/services/queries';
 
 const Dashboard = () => {
@@ -28,6 +34,21 @@ const Dashboard = () => {
         <span className="text-sm text-gray-400">Last login: {lastLogin}</span>
       </div>
       
+      {/* Identity Strip */}
+      <div className="mb-4">
+        <DashboardIdentityStrip />
+      </div>
+
+      {/* Stat Cards */}
+      <div className="mb-4">
+        <DashboardStats />
+      </div>
+
+      {/* Quick Actions */}
+      <div className="mb-4">
+        <DashboardQuickActions />
+      </div>
+
       {/* Timeline */}
       <DashboardTimeline />
       
@@ -51,6 +72,21 @@ const Dashboard = () => {
             <DashboardRecentDocuments />
           </div>
         </div>
+      </div>
+
+      {/* Upcoming Appointments & Research Clinic */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-2">
+        <div className="bg-white rounded-2xl shadow-md p-4 md:p-5 h-full min-h-[220px] w-full">
+          <DashboardUpcomingAppointments />
+        </div>
+        <div className="bg-white rounded-2xl shadow-md p-4 md:p-5 h-full min-h-[220px] w-full">
+          <DashboardUpcomingResearchClinic />
+        </div>
+      </div>
+
+      {/* Needs Attention */}
+      <div className="mt-2">
+        <DashboardNeedsAttention />
       </div>
     </div>
   );

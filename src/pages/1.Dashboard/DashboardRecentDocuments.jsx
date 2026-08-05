@@ -29,7 +29,7 @@ const DashboardRecentDocuments = () => {
         </h3>
         <button
           onClick={() => navigate('/documents')}
-          className="text-xs text-blue-600 hover:underline"
+          className="px-3 md:px-4 py-1.5 bg-[#25369B] text-white text-sm font-medium rounded-md hover:bg-[#1d285c] transition-colors"
         >
           View All
         </button>
@@ -37,7 +37,7 @@ const DashboardRecentDocuments = () => {
 
       {isLoading ? (
         <div className="flex items-center justify-center h-32">
-          <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+          <Loader2 className="h-6 w-6 animate-spin text-[#25369B]" />
         </div>
       ) : error ? (
         <div className="flex items-center justify-center h-32 text-red-500 gap-2">

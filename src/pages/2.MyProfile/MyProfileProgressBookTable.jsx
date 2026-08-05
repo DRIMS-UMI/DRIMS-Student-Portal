@@ -1,6 +1,8 @@
 import React, { useCallback, useState } from "react";
-import { useReactTable, getCoreRowModel, flexRender, getPaginationRowModel,
-  getFilteredRowModel, createColumnHelper } from "@tanstack/react-table";
+import {
+  useReactTable, getCoreRowModel, flexRender, getPaginationRowModel,
+  getFilteredRowModel, createColumnHelper
+} from "@tanstack/react-table";
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -29,7 +31,7 @@ const MyProfileProgressBookTable = ({ books, isLoadingBooks }) => {
   const navigate = useNavigate();
   const [globalFilter, setGlobalFilter] = React.useState("");
 
-  console.log(books)
+
 
   const columnHelper = createColumnHelper();
   const columns = [
@@ -53,10 +55,10 @@ const MyProfileProgressBookTable = ({ books, isLoadingBooks }) => {
       header: "Status",
       cell: (info) => {
         const statuses = info.getValue();
-        const currentStatus = statuses?.find(s => s.isCurrent) || 
-                             (statuses?.length > 0 ? statuses[statuses.length - 1] : null);
+        const currentStatus = statuses?.find(s => s.isCurrent) ||
+          (statuses?.length > 0 ? statuses[statuses.length - 1] : null);
         const statusName = currentStatus?.definition?.name || 'PENDING';
-        
+
         return (
           <span
             style={{
@@ -84,8 +86,8 @@ const MyProfileProgressBookTable = ({ books, isLoadingBooks }) => {
       cell: (info) => {
         const vivaHistory = info.getValue();
         const currentViva = vivaHistory?.find(v => v.isCurrent);
-        return currentViva?.scheduledDate 
-          ? format(new Date(currentViva.scheduledDate), 'MMM d, yyyy') 
+        return currentViva?.scheduledDate
+          ? format(new Date(currentViva.scheduledDate), 'MMM d, yyyy')
           : "-";
       },
     }),
@@ -94,7 +96,7 @@ const MyProfileProgressBookTable = ({ books, isLoadingBooks }) => {
       cell: (info) => {
         const averageMark = info.row.original.averageExamMark;
         let status = 'NOT GRADED';
-        
+
         if (averageMark !== null && averageMark !== undefined) {
           status = averageMark >= 60 ? 'PASSED' : 'FAILED';
         }
@@ -142,8 +144,8 @@ const MyProfileProgressBookTable = ({ books, isLoadingBooks }) => {
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th 
-                  key={header.id} 
+                <th
+                  key={header.id}
                   className="px-4 py-3 text-left text-[#111827] text-opacity-90 font-[Inter-SemiBold] text-sm"
                 >
                   {flexRender(header.column.columnDef.header, header.getContext())}
@@ -156,8 +158,8 @@ const MyProfileProgressBookTable = ({ books, isLoadingBooks }) => {
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
               {row.getVisibleCells().map((cell) => (
-                <td 
-                  key={cell.id} 
+                <td
+                  key={cell.id}
                   className="px-4 py-2 whitespace-nowrap text-[#111827] font-[Inter-Regular] text-xs"
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -181,7 +183,7 @@ const MyProfileProgressBookTable = ({ books, isLoadingBooks }) => {
           <span className="font-[Roboto-Medium] mx-1">
             {Math.min(
               (table.getState().pagination.pageIndex + 1) *
-                table.getState().pagination.pageSize,
+              table.getState().pagination.pageSize,
               table.getPrePaginationRowModel().rows.length
             )}
           </span>
@@ -202,11 +204,10 @@ const MyProfileProgressBookTable = ({ books, isLoadingBooks }) => {
           {Array.from({ length: table.getPageCount() }, (_, i) => i + 1).map(pageNumber => (
             <button
               key={pageNumber}
-              className={`w-8 h-8 rounded text-sm ${
-                pageNumber === table.getState().pagination.pageIndex + 1
+              className={`w-8 h-8 rounded text-sm ${pageNumber === table.getState().pagination.pageIndex + 1
                   ? 'bg-blue-50 text-blue-600 font-[Roboto-Medium]'
                   : 'text-gray-500'
-              }`}
+                }`}
               onClick={() => table.setPageIndex(pageNumber - 1)}
             >
               {pageNumber}

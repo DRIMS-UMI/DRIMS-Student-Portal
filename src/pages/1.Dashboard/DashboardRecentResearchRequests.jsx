@@ -2,6 +2,7 @@ import React from 'react';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
+import { Loader2 } from 'lucide-react';
 import { useGetStudentResearchRequests } from '../../store/tanstackStore/services/queries';
 
 const statusColors = {
@@ -23,10 +24,10 @@ const DashboardRecentResearchRequests = () => {
     return (
       <div className="w-full">
         <div className="flex items-center justify-between mb-2 md:mb-3">
-          <span className="font-semibold text-lg md:text-xl">Recent Research Requests</span>
+          <span className="text-sm font-semibold text-gray-700 uppercase tracking-wider">Recent Research Requests</span>
         </div>
         <div className="flex items-center justify-center h-32">
-          <div className="text-gray-500">Loading requests...</div>
+          <Loader2 className="h-6 w-6 animate-spin text-[#25369B]" />
         </div>
       </div>
     );
@@ -36,7 +37,7 @@ const DashboardRecentResearchRequests = () => {
     return (
       <div className="w-full">
         <div className="flex items-center justify-between mb-2 md:mb-3">
-          <span className="font-semibold text-lg md:text-xl">Recent Research Requests</span>
+          <span className="text-sm font-semibold text-gray-700 uppercase tracking-wider">Recent Research Requests</span>
         </div>
         <div className="flex items-center justify-center h-32">
           <div className="text-red-500">Failed to load requests</div>
@@ -48,16 +49,12 @@ const DashboardRecentResearchRequests = () => {
   return (
     <div className="w-full">
       <div className="flex items-center justify-between mb-2 md:mb-3">
-        <span className="font-semibold text-lg md:text-xl">Recent Research Requests</span>
-        <button 
-          className="flex items-center gap-2 px-3 md:px-4 py-1 bg-[#25369B] text-white rounded-md text-base font-medium hover:bg-[#1d285c] transition"
+        <span className="text-sm font-semibold text-gray-700 uppercase tracking-wider">Recent Research Requests</span>
+        <button
+          className="px-3 md:px-4 py-1.5 bg-[#25369B] text-white text-sm font-medium rounded-md hover:bg-[#1d285c] transition-colors"
           onClick={() => navigate('/requests')}
         >
           View All
-          <span className="flex flex-col ml-1">
-            <Icon icon="mdi:chevron-up" className="w-4 h-4" />
-            <Icon icon="mdi:chevron-down" className="w-4 h-4 -mt-1" />
-          </span>
         </button>
       </div>
       
@@ -66,7 +63,7 @@ const DashboardRecentResearchRequests = () => {
           <Icon icon="mdi:file-document-outline" className="w-12 h-12 text-gray-300 mb-2" />
           <div className="text-gray-500 mb-2">No research requests yet</div>
           <button 
-            className="px-4 py-2 bg-[#6c2bd7] text-white text-sm font-medium rounded-lg hover:bg-[#4b1fa3]"
+            className="px-4 py-2 bg-[#25369B] text-white text-sm font-medium rounded-lg hover:bg-[#1d285c]"
             onClick={() => navigate('/requests/submit')}
           >
             Make a Request
@@ -100,7 +97,7 @@ const DashboardRecentResearchRequests = () => {
           {requests.length > 5 && (
             <div className="pt-3">
               <button 
-                className="w-full text-center text-sm text-[#25369B] hover:text-[#1d285c] font-medium"
+                className="w-full py-2 bg-[#25369B] text-white text-sm font-medium rounded-md hover:bg-[#1d285c] transition-colors"
                 onClick={() => navigate('/requests')}
               >
                 View {requests.length - 5} more requests

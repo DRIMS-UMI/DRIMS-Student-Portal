@@ -15,8 +15,8 @@ const Sidebar = ({ onClose }) => {
   const { data: unreadData } = useGetUnreadMessageCount();
   const queryClient = useQueryClient();
 
-  console.log(userData)
-  
+
+
   const unreadCount = unreadData?.unreadCount || 0;
 
   const mainNavItems = [
@@ -52,8 +52,8 @@ const Sidebar = ({ onClose }) => {
         </div>
         {/* Mobile close button inside sidebar */}
         {onClose && (
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="md:hidden p-2 text-gray-500 hover:bg-gray-100 rounded-lg"
           >
             <Icon icon="mdi:close" className="w-5 h-5" />
@@ -101,10 +101,9 @@ const Sidebar = ({ onClose }) => {
                 to={item.path}
                 onClick={() => onClose && onClose()}
                 className={({ isActive: navActive }) =>
-                  `flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs transition-colors ${
-                    navActive || isActive
-                      ? 'bg-blue-50 text-[#23398B] font-semibold'
-                      : 'text-gray-900 hover:bg-blue-50'
+                  `flex items-center gap-3 px-3 py-2 rounded-lg font-medium text-xs transition-colors ${navActive || isActive
+                    ? 'bg-blue-50 text-[#23398B] font-semibold'
+                    : 'text-gray-900 hover:bg-blue-50'
                   }`
                 }
               >
@@ -133,10 +132,9 @@ const Sidebar = ({ onClose }) => {
                 to={item.path}
                 onClick={() => onClose && onClose()}
                 className={({ isActive: navActive }) =>
-                  `flex items-center gap-3 px-4 py-2 rounded-lg font-medium text-xs transition-colors ${
-                    navActive || isActive
-                      ? 'bg-blue-50 text-[#23398B] font-semibold'
-                      : 'text-gray-900 hover:bg-blue-50'
+                  `flex items-center gap-3 px-4 py-2 rounded-lg font-medium text-xs transition-colors ${navActive || isActive
+                    ? 'bg-blue-50 text-[#23398B] font-semibold'
+                    : 'text-gray-900 hover:bg-blue-50'
                   }`
                 }
               >

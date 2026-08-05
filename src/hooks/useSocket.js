@@ -27,6 +27,7 @@ export function useSocket(onMessage, onUserStatusChange, onTyping) {
     // Connect with JWT
     const socket = io(SOCKET_URL, {
       auth: { token },
+      extraHeaders: { 'ngrok-skip-browser-warning': 'true' }, // [ngrok]
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,

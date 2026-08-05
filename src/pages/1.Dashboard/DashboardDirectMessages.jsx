@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import { format, isToday, isYesterday } from 'date-fns';
+import { Loader2 } from 'lucide-react';
 import { useGetUnreadMessageCount } from '../../store/tanstackStore/services/queries';
 import { BASE_API_URL } from '../../utils/apiRequestUrl';
 
@@ -26,7 +27,8 @@ const DashboardDirectMessages = () => {
       const token = localStorage.getItem('umi_student_auth_token') || localStorage.getItem('token');
       const response = await fetch(`${API_URL}/messages/conversations`, {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'ngrok-skip-browser-warning': 'true' // [ngrok]
         }
       });
 
@@ -81,20 +83,16 @@ const DashboardDirectMessages = () => {
     return (
       <div className="">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-lg md:text-xl font-semibold">Direct Messages</span>
+          <span className="text-sm font-semibold text-gray-700 uppercase tracking-wider">Direct Messages</span>
           <button
-            className="flex items-center gap-2 px-3 md:px-4 py-1 bg-[#25369B] text-white rounded-md text-base font-medium hover:bg-[#1d285c] transition"
+            className="px-3 md:px-4 py-1.5 bg-[#25369B] text-white text-sm font-medium rounded-md hover:bg-[#1d285c] transition-colors"
             onClick={() => navigate('/direct-messages')}
           >
             View More
-            <span className="flex flex-col ml-1">
-              <Icon icon="mdi:chevron-up" className="w-4 h-4" />
-              <Icon icon="mdi:chevron-down" className="w-4 h-4 -mt-1" />
-            </span>
           </button>
         </div>
         <div className="flex items-center justify-center h-32">
-          <div className="text-gray-500">Loading messages...</div>
+          <Loader2 className="h-6 w-6 animate-spin text-[#25369B]" />
         </div>
       </div>
     );
@@ -104,16 +102,12 @@ const DashboardDirectMessages = () => {
     return (
       <div className="">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-lg md:text-xl font-semibold">Direct Messages</span>
+          <span className="text-sm font-semibold text-gray-700 uppercase tracking-wider">Direct Messages</span>
           <button
-            className="flex items-center gap-2 px-3 md:px-4 py-1 bg-[#25369B] text-white rounded-md text-base font-medium hover:bg-[#1d285c] transition"
+            className="px-3 md:px-4 py-1.5 bg-[#25369B] text-white text-sm font-medium rounded-md hover:bg-[#1d285c] transition-colors"
             onClick={() => navigate('/direct-messages')}
           >
             View More
-            <span className="flex flex-col ml-1">
-              <Icon icon="mdi:chevron-up" className="w-4 h-4" />
-              <Icon icon="mdi:chevron-down" className="w-4 h-4 -mt-1" />
-            </span>
           </button>
         </div>
         <div className="flex items-center justify-center h-32">
@@ -126,9 +120,9 @@ const DashboardDirectMessages = () => {
   return (
     <div className="">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-lg md:text-xl font-semibold">Direct Messages</span>
+        <span className="text-sm font-semibold text-gray-700 uppercase tracking-wider">Direct Messages</span>
         <button
-          className="flex items-center gap-2 px-3 md:px-4 py-1 bg-[#25369B] text-white rounded-md text-base font-medium hover:bg-[#1d285c] transition relative"
+          className="relative px-3 md:px-4 py-1.5 bg-[#25369B] text-white text-sm font-medium rounded-md hover:bg-[#1d285c] transition-colors"
           onClick={() => navigate('/direct-messages')}
         >
           View More
@@ -137,10 +131,6 @@ const DashboardDirectMessages = () => {
               {unreadCount > 9 ? '9+' : unreadCount}
             </span>
           )}
-          <span className="flex flex-col ml-1">
-            <Icon icon="mdi:chevron-up" className="w-4 h-4" />
-            <Icon icon="mdi:chevron-down" className="w-4 h-4 -mt-1" />
-          </span>
         </button>
       </div>
 
@@ -149,7 +139,7 @@ const DashboardDirectMessages = () => {
           <Icon icon="mdi:message-outline" className="w-12 h-12 text-gray-300 mb-2" />
           <div className="text-gray-500 mb-2">No conversations yet</div>
           <button
-            className="px-4 py-2 bg-[#6c2bd7] text-white text-sm font-medium rounded-lg hover:bg-[#4b1fa3]"
+            className="px-4 py-2 bg-[#25369B] text-white text-sm font-medium rounded-lg hover:bg-[#1d285c]"
             onClick={() => navigate('/direct-messages')}
           >
             Start Messaging
@@ -188,7 +178,7 @@ const DashboardDirectMessages = () => {
           {conversations.length > 3 && (
             <div className="pt-2">
               <button
-                className="w-full text-center text-sm text-[#25369B] hover:text-[#1d285c] font-medium"
+                className="w-full py-2 bg-[#25369B] text-white text-sm font-medium rounded-md hover:bg-[#1d285c] transition-colors"
                 onClick={() => navigate('/direct-messages')}
               >
                 View {conversations.length - 3} more conversations

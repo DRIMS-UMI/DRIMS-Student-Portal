@@ -19,6 +19,7 @@ import Appointments from "./pages/10.Appointments/Appointments";
 
 // PWA Component
 import PWAInstaller from "./components/PWAInstaller";
+import PWAUpdateToast from "./components/PWAUpdateToast";
 import SupportChatWidget from "./components/SupportChatWidget";
 import SupportTickets from "./pages/11.SupportTickets/SupportTickets";
 
@@ -59,6 +60,9 @@ function App() {
       
       {/* PWA Installer - shows on all pages including login */}
       <PWAInstaller />
+
+      {/* PWA Update - prompts to reload when a new version is available */}
+      <PWAUpdateToast />
       
       {/* Floating Support Chat Widget */}
       <SupportChatWidget />

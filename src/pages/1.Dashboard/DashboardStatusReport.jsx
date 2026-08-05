@@ -8,7 +8,7 @@ const DashboardStatusReport = () => {
   if (profileLoading) {
     return (
       <div className="">
-        <div className="text-lg md:text-xl font-semibold mb-3 md:mb-4">Status Report</div>
+        <div className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3 md:mb-4">Status Report</div>
         <div className="animate-pulse space-y-3">
           <div className="h-20 bg-gray-200 rounded-lg"></div>
           <div className="h-20 bg-gray-200 rounded-lg"></div>
@@ -20,7 +20,7 @@ const DashboardStatusReport = () => {
   if (profileError || !profileData?.student) {
     return (
       <div className="">
-        <div className="text-lg md:text-xl font-semibold mb-3 md:mb-4">Status Report</div>
+        <div className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3 md:mb-4">Status Report</div>
         <div className="text-center text-gray-500 py-4">
           Unable to load status information
         </div>
@@ -37,7 +37,7 @@ const DashboardStatusReport = () => {
 
   return (
     <div className="">
-      <div className="text-lg md:text-xl font-semibold mb-3 md:mb-4">Status Report</div>
+      <div className="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-3 md:mb-4">Status Report</div>
       
       {/* Current and Previous Status Display */}
       <div className="space-y-3">
