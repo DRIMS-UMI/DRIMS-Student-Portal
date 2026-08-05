@@ -40,9 +40,8 @@ const DocumentUpload = () => {
       setDescription('');
       setSelectedSupervisor('');
       
-      // Refresh the document list (invalidate + refetch; no cache wipe so the list doesn't blank out)
+      // Refresh the document list (invalidate triggers a refetch; no cache wipe so the list doesn't blank out)
       queryClient.invalidateQueries({ queryKey: ['studentDocuments'] });
-      queryClient.refetchQueries({ queryKey: ['studentDocuments'] });
 
       // Show success toast
       toast.success('Document uploaded successfully!');
