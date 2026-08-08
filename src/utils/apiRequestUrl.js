@@ -1,8 +1,9 @@
 import axios from 'axios';
 
 //export const BASE_API_URL = "https://drimsapi.alero.digital/api/v1";
-export const BASE_API_URL = 'https://drimsdemo.alero.co.ke/api/v1';
-//export const BASE_API_URL = 'https://drimsapi.umi.ac.ug/api/v1';
+//export const BASE_API_URL = 'https://drimsdemo.alero.co.ke/api/v1';
+// export const BASE_API_URL = 'http://localhost:5000/api/v1';
+export const BASE_API_URL = 'https://drimsapi.umi.ac.ug/api/v1';
 
 const apiRequest = axios.create({
   baseURL: BASE_API_URL,
