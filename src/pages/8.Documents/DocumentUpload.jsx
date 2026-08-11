@@ -7,7 +7,7 @@ import { AlertCircle, Loader2 } from 'lucide-react';
 import { uploadDocumentService, getStudentSupervisorsService, checkDocumentPageCountService } from '../../store/tanstackStore/services/api';
 import { queryClient } from '../../utils/tanstack';
 
-const MAX_PROPOSAL_PAGES = 17;
+const MAX_PROPOSAL_PAGES = 28;
 
 const DocumentUpload = () => {
   const [file, setFile] = useState(null);
