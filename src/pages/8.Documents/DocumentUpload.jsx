@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { PDFDocument } from 'pdf-lib';
+
 import JSZip from 'jszip';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { uploadDocumentService, getStudentSupervisorsService, checkDocumentPageCountService } from '../../store/tanstackStore/services/api';
@@ -56,12 +56,6 @@ const DocumentUpload = () => {
 
   // Socket-driven refresh is owned by DocumentList (it's always mounted on the Documents page)
 
-  const countPdfPages = async (selectedFile) => {
-    const arrayBuffer = await selectedFile.arrayBuffer();
-    const pdf = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
-    return pdf.getPageCount();
-  };
-
   const countDocxPages = async (selectedFile) => {
     try {
       const zip = await JSZip.loadAsync(await selectedFile.arrayBuffer());
@@ -87,9 +81,6 @@ const DocumentUpload = () => {
   };
 
   const countPages = async (selectedFile) => {
-    if (selectedFile.type === 'application/pdf') {
-      return countPdfPages(selectedFile);
-    }
     if (selectedFile.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
       return countDocxPages(selectedFile);
     }
@@ -116,7 +107,7 @@ const DocumentUpload = () => {
         setPageCount(count);
 
         if (count === null) {
-          const msg = "This file's page count couldn't be verified. Please save it as PDF or DOCX to upload a proposal.";
+          const msg = "This file's page count couldn't be verified. Please save it as DOCX to upload a proposal.";
           setPageBlockError(msg);
           toast.error(msg);
         } else if (count > MAX_PROPOSAL_PAGES) {
@@ -145,13 +136,12 @@ const DocumentUpload = () => {
     if (selectedFile) {
       // Validate file type
       const allowedTypes = [
-        'application/pdf',
         'application/msword',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
       ];
       
       if (!allowedTypes.includes(selectedFile.type)) {
-        toast.error('Please select a valid file type (PDF, DOC, or DOCX)');
+        toast.error('Please select a valid file type (DOC or DOCX)');
         return;
       }
 
@@ -360,13 +350,13 @@ const DocumentUpload = () => {
                       type="file"
                       className="sr-only"
                       onChange={handleFileChange}
-                      accept=".pdf,.doc,.docx"
+                      accept=".doc,.docx"
                       required
                     />
                   </label>
                   <p className="pl-1">or drag and drop</p>
                 </div>
-                <p className="text-xs text-gray-500">PDF, DOC, DOCX up to 10MB</p>
+                <p className="text-xs text-gray-500">DOC, DOCX up to 10MB</p>
               </div>
             </div>
           )}
