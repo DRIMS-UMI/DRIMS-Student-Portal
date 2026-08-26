@@ -5,6 +5,7 @@ import DashboardStatusReport from './DashboardStatusReport';
 import DashboardDirectMessages from './DashboardDirectMessages';
 import DashboardRecentResearchRequests from './DashboardRecentResearchRequests';
 import DashboardRecentDocuments from './DashboardRecentDocuments';
+import DashboardGuidelines from './DashboardGuidelines';
 import DashboardUpcomingAppointments from './DashboardUpcomingAppointments';
 import DashboardUpcomingResearchClinic from './DashboardUpcomingResearchClinic';
 import DashboardIdentityStrip from './DashboardIdentityStrip';
@@ -70,6 +71,9 @@ const Dashboard = () => {
           </div>
           <div className="bg-white rounded-2xl shadow-md p-4 md:p-5 h-full min-h-[200px] max-h-[320px] flex flex-col w-full">
             <DashboardRecentDocuments />
+          </div>
+          <div className="bg-white rounded-2xl shadow-md p-4 md:p-5 h-full min-h-[200px] max-h-[320px] flex flex-col w-full">
+            <DashboardGuidelines />
           </div>
         </div>
       </div>

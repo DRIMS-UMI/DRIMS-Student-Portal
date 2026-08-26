@@ -293,6 +293,37 @@ export const cancelResearchClinicBookingService = async (bookingId: string) => {
     }
 };
 
+/* ********** GUIDELINES ********** */
+
+export const getStudentGuidelinesService = async () => {
+    try {
+        const response = await apiRequest.get("/student/guidelines");
+        return response.data;
+    } catch (error) {
+        errorHandling(error);
+    }
+};
+
+export const markGuidelineViewedService = async (guidelineId: string) => {
+    try {
+        const response = await apiRequest.put(`/student/guidelines/${guidelineId}/view`);
+        return response.data;
+    } catch (error) {
+        errorHandling(error);
+    }
+};
+
+export const downloadGuidelineStudentService = async (guidelineId: string) => {
+    try {
+        const response = await apiRequest.get(`/student/guidelines/${guidelineId}/download`, {
+            responseType: 'blob'
+        });
+        return response;
+    } catch (error) {
+        errorHandling(error);
+    }
+};
+
 /* ********** APPOINTMENTS ********** */
 
 export const getAvailableAppointmentsService = async () => {

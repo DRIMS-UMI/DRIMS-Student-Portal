@@ -3,6 +3,7 @@ import { useGetLoggedInUser, useGetStudentDocuments } from '../../store/tanstack
 import DocumentUpload from './DocumentUpload';
 import DocumentList from './DocumentList';
 import DocumentPreview from './DocumentPreview';
+import GuidelinesSection from './GuidelinesSection';
 
 const Documents = () => {
   const { data: userData } = useGetLoggedInUser();
@@ -23,7 +24,10 @@ const Documents = () => {
           )}
         </div>
       </div>
-      
+
+      {/* Guidelines from Supervisor */}
+      <GuidelinesSection />
+
       {/* Main Content */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Upload Section */}

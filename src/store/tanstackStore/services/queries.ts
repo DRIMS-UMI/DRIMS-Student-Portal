@@ -32,7 +32,10 @@ import {
   cancelAppointmentService,
   getStudentTicketsService,
   createSupportTicketService,
-  replyToTicketService
+  replyToTicketService,
+  getStudentGuidelinesService,
+  markGuidelineViewedService,
+  downloadGuidelineStudentService
 } from './api';
 
 /* ********** STUDENT QUERIES ********** */
@@ -370,5 +373,29 @@ export const useReplyToTicket = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['studentTickets'] });
     },
+  });
+};
+
+/* ********** GUIDELINES ********** */
+
+export const useGetStudentGuidelines = () => {
+  return useQuery({
+    queryKey: ['studentGuidelines'],
+    queryFn: getStudentGuidelinesService,
+  });
+};
+
+export const useMarkGuidelineViewed = () => {
+  return useMutation({
+    mutationFn: markGuidelineViewedService,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['studentGuidelines'] });
+    },
+  });
+};
+
+export const useDownloadStudentGuideline = () => {
+  return useMutation({
+    mutationFn: downloadGuidelineStudentService,
   });
 };

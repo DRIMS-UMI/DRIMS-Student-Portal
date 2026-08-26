@@ -230,6 +230,7 @@ const DocumentPreview = ({ document: documentRecord, allDocuments = [], onClose 
                               </div>
                             </div>
                           </div>
+                          {reviewDoc.fileName && (
                           <button
                             onClick={() => handleDownload(reviewDoc.id, reviewDoc.fileName || reviewDoc.title)}
                             disabled={downloadingId === reviewDoc.id}
@@ -247,6 +248,7 @@ const DocumentPreview = ({ document: documentRecord, allDocuments = [], onClose 
                             )}
                             <span className="hidden lg:inline">Download</span>
                           </button>
+                          )}
                         </div>
                         {(reviewDoc.reviewComments || reviewDoc.description) && (
                           <div className="text-sm text-gray-600 bg-green-50/50 p-3 rounded border border-green-50">
