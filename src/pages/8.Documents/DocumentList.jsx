@@ -331,6 +331,11 @@ const DocumentList = ({ onDocumentSelect }) => {
                         Reviewed
                       </span>
                     )}
+                    {(document.isReviewed || document.type === 'REVIEWED') && !document.fileName && (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                        Comments Only
+                      </span>
+                    )}
                   </div>
 
                   {document.description && (

@@ -167,28 +167,37 @@ const DocumentPreview = ({ document: documentRecord, allDocuments = [], onClose 
                         )}
                       </div>
                     </div>
-                    <button
-                      onClick={() => handleDownload()}
-                      disabled={downloadingId === documentRecord.id}
-                      className="px-3 py-1.5 lg:px-4 lg:py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center gap-2 cursor-pointer self-start lg:self-auto"
-                    >
-                      {downloadingId === documentRecord.id ? (
-                        <>
-                          <svg className="w-4 h-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                          </svg>
-                          <span className="hidden lg:inline">Downloading...</span>
-                        </>
-                      ) : (
-                        <>
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                          </svg>
-                          <span className="hidden lg:inline">Download</span>
-                        </>
-                      )}
-                    </button>
+                    {documentRecord.fileName ? (
+                      <button
+                        onClick={() => handleDownload()}
+                        disabled={downloadingId === documentRecord.id}
+                        className="px-3 py-1.5 lg:px-4 lg:py-2 text-sm font-medium text-blue-700 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center gap-2 cursor-pointer self-start lg:self-auto"
+                      >
+                        {downloadingId === documentRecord.id ? (
+                          <>
+                            <svg className="w-4 h-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span className="hidden lg:inline">Downloading...</span>
+                          </>
+                        ) : (
+                          <>
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <span className="hidden lg:inline">Download</span>
+                          </>
+                        )}
+                      </button>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 self-start lg:self-auto text-sm font-medium text-amber-700 bg-amber-50 border border-amber-200 rounded-md">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                        </svg>
+                        Comments Only
+                      </span>
+                    )}
                   </div>
                   {documentRecord.description && (
                     <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded border border-gray-100">
@@ -230,7 +239,7 @@ const DocumentPreview = ({ document: documentRecord, allDocuments = [], onClose 
                               </div>
                             </div>
                           </div>
-                          {reviewDoc.fileName && (
+                          {reviewDoc.fileName ? (
                           <button
                             onClick={() => handleDownload(reviewDoc.id, reviewDoc.fileName || reviewDoc.title)}
                             disabled={downloadingId === reviewDoc.id}
@@ -248,6 +257,13 @@ const DocumentPreview = ({ document: documentRecord, allDocuments = [], onClose 
                             )}
                             <span className="hidden lg:inline">Download</span>
                           </button>
+                          ) : (
+                            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 self-start lg:self-auto text-sm font-medium text-amber-700 bg-amber-50 border border-amber-200 rounded-md">
+                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                              </svg>
+                              Comments Only
+                            </span>
                           )}
                         </div>
                         {(reviewDoc.reviewComments || reviewDoc.description) && (
