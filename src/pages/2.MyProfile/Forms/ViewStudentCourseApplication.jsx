@@ -14,7 +14,7 @@ const ViewStudentCourseApplication = ({studentData}) => {
         <div>
           <label className="block text-sm font-[Inter-Medium] text-gray-700">Course</label>
           <div className="mt-2 p-2 bg-gray-50 rounded-[6px] text-base text-[Inter-Regular] border border-gray-200">
-            {studentData?.student?.course || 'N/A'}
+            {studentData?.student?.course?.title || 'N/A'}
           </div>
         </div>
         <div>
@@ -44,7 +44,7 @@ const ViewStudentCourseApplication = ({studentData}) => {
         <div>
           <label className="block text-sm font-[Inter-Medium] text-gray-700">Specialization</label>
             <div className="mt-2 p-2 bg-gray-50 rounded-[6px] text-base text-[Inter-Regular] border border-gray-200">
-            {studentData?.student?.specialization || 'N/A'}
+            {studentData?.student?.specialization?.name || 'N/A'}
           </div>
         </div>
         <div>
