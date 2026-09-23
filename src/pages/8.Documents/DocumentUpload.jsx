@@ -145,12 +145,6 @@ const DocumentUpload = () => {
         return;
       }
 
-      // Validate file size (10MB limit)
-      if (selectedFile.size > 10 * 1024 * 1024) {
-        toast.error('File size must be less than 10MB');
-        return;
-      }
-
       setFile(selectedFile);
     }
   };
@@ -356,7 +350,7 @@ const DocumentUpload = () => {
                   </label>
                   <p className="pl-1">or drag and drop</p>
                 </div>
-                <p className="text-xs text-gray-500">DOC, DOCX up to 10MB</p>
+                <p className="text-xs text-gray-500">DOC, DOCX</p>
               </div>
             </div>
           )}
