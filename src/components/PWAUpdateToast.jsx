@@ -1,8 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { RefreshCw, X, Info } from 'lucide-react';
 import { useRegisterSW } from 'virtual:pwa-register/react';
 
 const APP_INFO = __APP_VERSION__;
+
+const UPDATE_DISMISSED_KEY = 'umi-update-dismissed-at';
+const UPDATE_NAG_COOLDOWN = 24 * 60 * 60 * 1000;
 
 const formatBuild = (iso) => {
   if (!iso) return '';
@@ -23,6 +27,10 @@ const PWAUpdateToast = () => {
   const registrationRef = useRef(null);
   const [previousBuild] = useState(() => localStorage.getItem('umi_prev_app_version'));
   const [showIOSReinstall, setShowIOSReinstall] = useState(false);
+  const [updateDismissedAt, setUpdateDismissedAt] = useState(
+    () => Number(sessionStorage.getItem(UPDATE_DISMISSED_KEY)) || 0
+  );
+  const location = useLocation();
 
   const {
     needRefresh: [needRefresh, setNeedRefresh],
@@ -79,10 +87,25 @@ const PWAUpdateToast = () => {
     };
   }, []);
 
+  // The "Later" / close actions only reset local component state, so the toast used to stay
+  // gone for the rest of the session once a student dismissed it mid-app. Re-assert it on
+  // each route change, honouring a cooldown so it never nags on every click.
+  useEffect(() => {
+    if (Date.now() - updateDismissedAt <= UPDATE_NAG_COOLDOWN) return;
+    if (registrationRef.current?.waiting) setNeedRefresh(true);
+  }, [location.pathname, updateDismissedAt, setNeedRefresh]);
+
   const hasUpdate = needRefresh && previousBuild && previousBuild !== APP_INFO?.build;
 
   const handleUpdate = () => {
     updateServiceWorker(true);
+  };
+
+  const handleDismissUpdate = () => {
+    setNeedRefresh(false);
+    const dismissedAt = Date.now();
+    sessionStorage.setItem(UPDATE_DISMISSED_KEY, String(dismissedAt));
+    setUpdateDismissedAt(dismissedAt);
   };
 
   return (
@@ -148,9 +171,14 @@ const PWAUpdateToast = () => {
                 )}{' '}
                 Update now to get the latest features and fixes.
               </p>
+              {/* The release notes for the incoming version live in the new bundle, which is
+                  not running yet, so they can only be shown once the update completes. */}
+              <p className="text-xs text-gray-400 mt-1">
+                We&apos;ll show you what changed once the update finishes.
+              </p>
             </div>
             <button
-              onClick={() => setNeedRefresh(false)}
+              onClick={handleDismissUpdate}
               className="flex-shrink-0 text-gray-400 hover:text-gray-600"
               aria-label="Dismiss"
             >
@@ -165,10 +193,10 @@ const PWAUpdateToast = () => {
               Update now
             </button>
             <button
-              onClick={() => setNeedRefresh(false)}
+              onClick={handleDismissUpdate}
               className="flex-1 bg-gray-100 text-gray-700 text-sm font-medium py-2 px-3 rounded-md hover:bg-gray-200 transition-colors"
             >
-              Later
+              Remind me tomorrow
             </button>
           </div>
         </div>
