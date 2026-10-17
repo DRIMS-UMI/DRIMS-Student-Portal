@@ -15,6 +15,8 @@ const SupportChatWidget = () => {
   const [guestInfo, setGuestInfo] = useState({ name: '', email: '', phone: '' });
   const [isRegisteredGuest, setIsRegisteredGuest] = useState(false);
   const [ticketId, setTicketId] = useState(null);
+  // Guest-only key proving this browser opened the ticket; sent with every message
+  const [guestToken, setGuestToken] = useState(null);
   const [ticketNumber, setTicketNumber] = useState('');
   
   const [messages, setMessages] = useState([]);
@@ -82,11 +84,13 @@ const SupportChatWidget = () => {
       const newTicket = res.data.ticket;
       setTicketId(newTicket.id);
       setTicketNumber(newTicket.ticketNumber);
+      const guestAccessToken = res.data.guestAccessToken || null;
+      setGuestToken(guestAccessToken);
       setIsRegisteredGuest(true);
       
       // Now connect actual socket to the ticket room
       const socketUrl = BASE_API_URL.replace('/api/v1', '');
-      const authOpts = token ? { auth: { token } } : { query: { isGuest: 'true', guestId: newTicket.guestEmail || 'guest' } };
+      const authOpts = token ? { auth: { token } } : { query: { isGuest: 'true' } };
       
       const chatSocket = io(socketUrl, {
         ...authOpts,
@@ -94,7 +98,7 @@ const SupportChatWidget = () => {
       });
 
       chatSocket.on('connect', () => {
-        chatSocket.emit('join_ticket', { ticketId: newTicket.id });
+        chatSocket.emit('join_ticket', { ticketId: newTicket.id, guestToken: guestAccessToken });
       });
 
       chatSocket.on('new_support_message', (data) => {
@@ -134,14 +138,8 @@ const SupportChatWidget = () => {
       if (newMessage.trim()) formData.append('message', newMessage);
       if (file) formData.append('attachment', file);
       
-      // Note: For guest users without a token, we might need a specific endpoint or guest token.
-      // But we mapped apiRequest which sends `umi_student_token` if exists.
-      // Assuming backend allows public message posting if guestEmail matches, 
-      // or we just send it and if it fails due to auth we need a guest ticket token.
-      // For now, we'll send it via REST. If REST needs auth, we'll need a guest-specific route.
-      
       const res = await apiRequest.post(`/tickets/${ticketId}/messages`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
+        headers: { 'Content-Type': 'multipart/form-data', ...(guestToken ? { 'x-ticket-token': guestToken } : {}) }
       });
 
       setNewMessage('');
