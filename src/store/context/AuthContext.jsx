@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import apiRequest from "../../utils/apiRequestUrl";
 
 export const AuthContext = createContext();
 const TOKEN_STORAGE_KEY = 'umi_student_auth_token';
@@ -15,6 +16,13 @@ export const AuthContextProvider = ({ children }) => {
     };
 
     const logout = () => {
+        // Revoke the token server-side. Fire-and-forget: local sign-out must not wait on the network.
+        const currentToken = localStorage.getItem(TOKEN_STORAGE_KEY) || localStorage.getItem('token');
+        if (currentToken) {
+            apiRequest
+                .post('/student/logout', null, { headers: { Authorization: `Bearer ${currentToken}` } })
+                .catch(() => {});
+        }
         setToken(null);
         localStorage.removeItem(TOKEN_STORAGE_KEY);
         localStorage.removeItem('token');
